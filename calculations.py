@@ -6,8 +6,8 @@ locale.setlocale(locale.LC_ALL, 'en_DE')
 def principal_Calculation(sub_total):
     IVA = sub_total * 0.16
     total = sub_total + IVA
-    print(f'\nSub-Total:    {round(sub_total,2):n}')
-    print(f' IVA(16%):     {round(IVA,2):n}')
+    print(f'\nSub-Total:    {round(Decimal(sub_total),2):n}')
+    print(f' IVA(16%):     {round(Decimal(IVA),2):n}')
     print(f'    Total:    {round(Decimal(total),2):n}\n')
     return IVA, total
 
@@ -44,8 +44,8 @@ def question_Loop(question):
 
 def rest_to_Pay(pay_Cash, IGTF,total):
     print('******************************')
-    print(f'The rest to pay is:{round((total + IGTF) - pay_Cash,2):n}')
-    print('******************************')
+    print(f'The rest to pay is: {round((Decimal(total) + Decimal(IGTF)) - Decimal(pay_Cash),2):n}')
+    print('******************************\n')
     pass
 
 def main_Function(main_Question, agent_of_retention, sub_total, IVA,total):
@@ -74,16 +74,16 @@ def main_Function(main_Question, agent_of_retention, sub_total, IVA,total):
         print('Please select a valid option...')
 
 def print_Bill(sub_total, IVA, pay_Cash,IGTF, total):
-    print(f'\nSub-Total:    ${round(sub_total,2):n}')
-    print(f' IVA(16%):     ${round(IVA,2):n}')
-    print(f'$ Payment:    ${round(pay_Cash,2):n}')
-    print(f' IGTF(3%):     ${round(IGTF,2):n}')
+    print(f'\nSub-Total:    ${round(Decimal(sub_total),2):n}')
+    print(f' IVA(16%):     ${round(Decimal(IVA),2):n}')
+    print(f'$ Payment:    ${round(Decimal(pay_Cash),2):n}')
+    print(f' IGTF(3%):       ${round(Decimal(IGTF),2):n}')
     print(f'    Total:    ${round(Decimal(total) + Decimal(IGTF),2):n}\n')
 
 # TODO Use just one format for the bill, switching the iva percentage and value, depending if the user wants to calculate the retention of the iva.
 def print_Reten_Bill(sub_total, reten_IVA, pay_Cash,IGTF,reten_Total):
-    print(f'\n        Sub-Total:     ${round(sub_total,2):n}')
-    print(f'        IVA (25%):      ${round(reten_IVA,2):n}')
-    print(f'        $ Payment:      ${round(pay_Cash,2):n}')
-    print(f'         IGTF(3%):      ${round(IGTF,2):n}')
+    print(f'\n        Sub-Total:     ${round(Decimal(sub_total),2):n}')
+    print(f'        IVA (25%):      ${round(Decimal(reten_IVA),2):n}')
+    print(f'        $ Payment:     ${round(Decimal(pay_Cash),2):n}')
+    print(f'         IGTF(3%):      ${round(Decimal(IGTF),2):n}')
     print(f'            Total:     ${round(Decimal(reten_Total) + Decimal(IGTF),2):n}\n')
