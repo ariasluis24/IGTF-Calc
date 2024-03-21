@@ -8,7 +8,7 @@ def principal_Calculation(sub_total):
     total = sub_total + IVA
     print(f'\nSub-Total:    {round(sub_total,2):n}')
     print(f' IVA(16%):     {round(IVA,2):n}')
-    print(f'    Total:    {round(total,2):n}\n')
+    print(f'    Total:    {round(Decimal(total),2):n}\n')
     return IVA, total
 
 def calc_IGTF(pay_Cash):
