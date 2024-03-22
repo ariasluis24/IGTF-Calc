@@ -3,12 +3,19 @@ import locale
 from decimal import Decimal
 locale.setlocale(locale.LC_ALL, 'en_DE')
 
+#TODO CALCULATE THE RETEN OF A BILL BEFORE.
 def principal_Calculation(sub_total):
     IVA = sub_total * 0.16
     total = sub_total + IVA
+    print('***************NORMAL BILL******************')
     print(f'\nSub-Total:    {round(Decimal(sub_total),2):n}')
     print(f' IVA(16%):     {round(Decimal(IVA),2):n}')
     print(f'    Total:    {round(Decimal(total),2):n}\n')
+    print('*************RETAINED BILL******************')
+    print(f'\n   Sub-Total:    {round(Decimal(sub_total),2):n}')
+    print(f'    IVA(16%):     {round(Decimal(IVA),2):n}')
+    print(f'Retained IVA:      {round(Decimal(IVA*0.25),2):n}')
+    print(f'       Total:    {round(Decimal(sub_total) + Decimal(IVA*0.25),2):n}\n')
     return IVA, total
 
 def calc_IGTF(pay_Cash):

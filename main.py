@@ -1,5 +1,5 @@
 #IGTF-Calc 
-#ver: alpha-0.73 
+#ver: alpha-0.74 
 import calculations
 while True:
     #Variables WIP
