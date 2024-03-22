@@ -1,13 +1,17 @@
 # Import to set the locale system for de decimal(,) and thousand(.) separators.
 import locale
+from decimal import Decimal
 locale.setlocale(locale.LC_ALL, 'en_DE')
 
+#TODO CALCULATE THE RETEN OF A BILL BEFORE.
 def principal_Calculation(sub_total):
     IVA = sub_total * 0.16
     total = sub_total + IVA
-    print(f'\nSub-Total:    {round(sub_total,3):n}')
-    print(f' IVA(16%):     {round(IVA,2):n}')
-    print(f'    Total:    {round(total,2):n}\n')
+    print('***************NORMAL BILL***************************RETAINED BILL******************')
+    print(f'\nSub-Total:    {round(Decimal(sub_total),2):n}          *              Sub-Total:    {round(Decimal(sub_total),2):n}') 
+    print(f' IVA(16%):     {round(Decimal(IVA),2):n}          *               IVA(16%):     {round(Decimal(IVA),2):n}') 
+    print(f'    Total:    {round(Decimal(total),2):n}          *           Retained IVA:      {round(Decimal(IVA*0.25),2):n}')
+    print(f'                              *                  Total:    {round(Decimal(sub_total) + Decimal(IVA*0.25),2):n}\n')
     return IVA, total
 
 def calc_IGTF(pay_Cash):
@@ -41,8 +45,10 @@ def question_Loop(question):
         else:
             print('Please select a valid option...')
 
-def rest_to_Pay(pay_cash,total):
-    # print(f'The resto to pay is:{}')
+def rest_to_Pay(pay_Cash, IGTF,total):
+    print('******************************')
+    print(f'The rest to pay is: {round((Decimal(total) + Decimal(IGTF)) - Decimal(pay_Cash),2):n}')
+    print('******************************\n')
     pass
 
 def main_Function(main_Question, agent_of_retention, sub_total, IVA,total):
@@ -53,11 +59,12 @@ def main_Function(main_Question, agent_of_retention, sub_total, IVA,total):
         pay_Cash = is_Float_Loop('Please how much is going to be cancel on $?: ')
         IGTF = calc_IGTF(pay_Cash)
         print_Reten_Bill(sub_total, reten_IVA, pay_Cash, IGTF, reten_Total)
-
+        rest_to_Pay(pay_Cash, IGTF,reten_Total)
     elif len(main_Question) == 1 and main_Question.lower() == 'y' and agent_of_retention.lower() == 'n':
         pay_Cash = is_Float_Loop('Please how much is going to be cancel on $?: ')
         IGTF = calc_IGTF(pay_Cash)
         print_Bill(sub_total, IVA, pay_Cash,IGTF,total)
+        rest_to_Pay(pay_Cash, IGTF,total)
     elif len(main_Question) == 1 and main_Question.lower() == 'n' and agent_of_retention.lower() == 'y':
         
         reten_Results = calc_Retention(sub_total,IVA)
@@ -70,16 +77,16 @@ def main_Function(main_Question, agent_of_retention, sub_total, IVA,total):
         print('Please select a valid option...')
 
 def print_Bill(sub_total, IVA, pay_Cash,IGTF, total):
-    print(f'\nSub-Total:    ${round(sub_total,3):n}')
-    print(f' IVA(16%):     ${round(IVA,2):n}')
-    print(f'$ Payment:    ${round(pay_Cash,2):n}')
-    print(f' IGTF(3%):     ${round(IGTF,2):n}')
-    print(f'    Total:    ${round(total+ IGTF,2):n}\n')
+    print(f'\nSub-Total:    ${round(Decimal(sub_total),2):n}')
+    print(f' IVA(16%):     ${round(Decimal(IVA),2):n}')
+    print(f'$ Payment:    ${round(Decimal(pay_Cash),2):n}')
+    print(f' IGTF(3%):      ${round(Decimal(IGTF),2):n}')
+    print(f'    Total:    ${round(Decimal(total) + Decimal(IGTF),2):n}\n')
 
 # TODO Use just one format for the bill, switching the iva percentage and value, depending if the user wants to calculate the retention of the iva.
 def print_Reten_Bill(sub_total, reten_IVA, pay_Cash,IGTF,reten_Total):
-    print(f'\n        Sub-Total:     ${round(sub_total,3):n}')
-    print(f'        IVA (25%):      ${round(reten_IVA,2):n}')
-    print(f'        $ Payment:      ${round(pay_Cash,2):n}')
-    print(f'         IGTF(3%):      ${round(IGTF,2):n}')
-    print(f'            Total:     ${round(reten_Total+ IGTF,2):n}\n')
+    print(f'\n        Sub-Total:     ${round(Decimal(sub_total),2):n}')
+    print(f'        IVA (25%):       ${round(Decimal(reten_IVA),2):n}')
+    print(f'        $ Payment:     ${round(Decimal(pay_Cash),2):n}')
+    print(f'         IGTF(3%):      ${round(Decimal(IGTF),2):n}')
+    print(f'            Total:     ${round(Decimal(reten_Total) + Decimal(IGTF),2):n}\n')
