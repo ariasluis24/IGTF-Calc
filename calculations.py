@@ -1,9 +1,10 @@
-# Import to set the locale system for de decimal(,) and thousand(.) separators.
-import locale
+# Import to set the locale system for the decimal(,) and thousand(.) separators.
+import locale, datetime
 from decimal import Decimal
+now = datetime.datetime.now()
+date = now.strftime("%d-%m-%Y %H-%M-%S")
 locale.setlocale(locale.LC_ALL, 'en_DE')
 
-#TODO CALCULATE THE RETEN OF A BILL BEFORE.
 def principal_Calculation(sub_total):
     IVA = sub_total * 0.16
     total = sub_total + IVA
@@ -13,6 +14,15 @@ def principal_Calculation(sub_total):
     print(f'    Total:    {round(Decimal(total),2):n}          *           Retained IVA:      {round(Decimal(IVA*0.25),2):n}')
     print(f'                              *                  Total:    {round(Decimal(sub_total) + Decimal(IVA*0.25),2):n}\n')
     return IVA, total
+
+def txt_Bill(sub_total, IVA, total):
+    return f'''                 Date:{date} Client: -
+                ***************NORMAL BILL***************************RETAINED BILL******************
+            Sub-Total:    {round(Decimal(sub_total),2):n}          *              Sub-Total:    {round(Decimal(sub_total),2):n}
+             IVA(16%):     {round(Decimal(IVA),2):n}          *               IVA(16%):     {round(Decimal(IVA),2):n}
+                Total:    {round(Decimal(total),2):n}          *           Retained IVA:     {round(Decimal(IVA*0.25),2):n}
+                                          *                  Total:    {round(Decimal(sub_total) + Decimal(IVA*0.25),2):n}\n
+    '''
 
 def calc_IGTF(pay_Cash):
     IGTF = pay_Cash * 0.03
@@ -32,7 +42,6 @@ def is_Float_Loop(question):
         except ValueError:
             print('Please enter a valid option...')
             pass
-
 
 def question_Loop(question):
     while True:    
@@ -90,3 +99,7 @@ def print_Reten_Bill(sub_total, reten_IVA, pay_Cash,IGTF,reten_Total):
     print(f'        $ Payment:     ${round(Decimal(pay_Cash),2):n}')
     print(f'         IGTF(3%):      ${round(Decimal(IGTF),2):n}')
     print(f'            Total:     ${round(Decimal(reten_Total) + Decimal(IGTF),2):n}\n')
+
+#WIP If it is needed show the values on bolivars at the BCV rate.
+def to_Bolivars(data, BCV):
+    bolivars = lambda data:data * BCV
