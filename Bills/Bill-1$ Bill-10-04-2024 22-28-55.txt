@@ -1,0 +1,8 @@
+                 Date:10-04-2024 22-28-55 Client: -
+                ***************NORMAL BILL***************************RETAINED BILL******************
+            Sub-Total:    1,00          *              Sub-Total:    1,00
+             IVA(16%):     0,16          *               IVA(16%):     0,16
+                Total:    1,16          *           Retained IVA:     0,04
+                                          *                  Total:    1,04
+
+    

@@ -1,10 +1,11 @@
 # Import to set the locale system for the decimal(,) and thousand(.) separators.
 import locale, datetime
 from decimal import Decimal
+from scrap_price_BCV import price_BCV
 locale.setlocale(locale.LC_ALL, 'en_DE')
 now = datetime.datetime.now()
 date = now.strftime("%d-%m-%Y %H-%M-%S")
-BCV_Rate = 36.2760
+BCV_Rate = price_BCV
 
 def principal_Calculation(sub_total):
     IVA = sub_total * 0.16
@@ -77,9 +78,8 @@ def main_Function(main_Question, agent_of_retention, sub_total, IVA,total):
         rest_to_Pay(pay_Cash, IGTF,total)
         convert_to_bolivars = input('\nDo you wanna convert theese values to Bolivars? (Y/N): ')
         if convert_to_bolivars.lower() == 'y':
-            my_data = [sub_total,IVA, pay_Cash, IGTF, total]
-            # to_Bolivars(my_data, BCV_Rate)
-            print(to_Bolivars(my_data, BCV_Rate)[0])
+            sub_total, IVA, pay_Cash, IGTF, total = convert_to_Bolivars([sub_total,IVA, pay_Cash, IGTF, total], BCV_Rate)
+            print_Bill(sub_total, IVA, pay_Cash, IGTF, total)
     elif len(main_Question) == 1 and main_Question.lower() == 'n' and agent_of_retention.lower() == 'y':
         
         reten_Results = calc_Retention(sub_total,IVA)
@@ -108,7 +108,7 @@ def print_Reten_Bill(sub_total, reten_IVA, pay_Cash,IGTF,reten_Total):
 
 #WIP If it is needed show the values on bolivars at the BCV rate.
 
-def to_Bolivars(data, BCV_Rate):
+def convert_to_Bolivars(data, BCV_Rate):
     my_values = []
     for x in data:
         my_values.append(x * BCV_Rate)
