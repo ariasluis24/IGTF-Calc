@@ -16,4 +16,4 @@ list_BCV.insert(2, '.') #Result = ['3', '6', '.', '1', '8', '8', '3', '0', '0', 
 str_BCV = ''.join(list_BCV) # Formating list into a single string 36.18830000.
 price_BCV = float(str_BCV) # Casting string into a float.
 
-print(price_BCV) # Result = 36.1883   
+# print(price_BCV) # Result = 36.1883   
