@@ -19,5 +19,3 @@ while True:
     # Agent of retention case:
     agent_of_retention = calculations.question_Loop('Do you want to calc the retention?(Y/N): ')
     calculations.main_Function(main_Question,agent_of_retention,sub_total,IVA,total)
-    # Convertion to Bs
-    # convert_to_bolivars = calculations.to_Bolivars()

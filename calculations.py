@@ -62,6 +62,7 @@ def rest_to_Pay(pay_Cash, IGTF,total):
     print('******************************\n')
     pass
 
+# WIP make a loop question asking for a yes or no to convert into bolivars and select a valid option if the answer is not valid.
 def main_Function(main_Question, agent_of_retention, sub_total, IVA,total):
 
     if len(main_Question) == 1 and main_Question.lower() == 'y' and agent_of_retention.lower() == 'y':
@@ -71,6 +72,14 @@ def main_Function(main_Question, agent_of_retention, sub_total, IVA,total):
         IGTF = calc_IGTF(pay_Cash)
         print_Reten_Bill(sub_total, reten_IVA, pay_Cash, IGTF, reten_Total)
         rest_to_Pay(pay_Cash, IGTF,reten_Total)
+        convert_to_bolivars = input('\nDo you wanna convert theese values to Bolivars? (Y/N): ')
+        if convert_to_bolivars.lower() == 'y':
+            sub_total, IVA, pay_Cash, IGTF, total = convert_to_Bolivars([sub_total,IVA, pay_Cash, IGTF, total], BCV_Rate)
+            print_Bill(sub_total, IVA, pay_Cash, IGTF, total)
+        elif convert_to_bolivars.lower() == 'n':
+            pass
+        else:
+            print('Select a Valid Option...')
     elif len(main_Question) == 1 and main_Question.lower() == 'y' and agent_of_retention.lower() == 'n':
         pay_Cash = is_Float_Loop('Please how much is going to be cancel on $?: ')
         IGTF = calc_IGTF(pay_Cash)
@@ -80,14 +89,33 @@ def main_Function(main_Question, agent_of_retention, sub_total, IVA,total):
         if convert_to_bolivars.lower() == 'y':
             sub_total, IVA, pay_Cash, IGTF, total = convert_to_Bolivars([sub_total,IVA, pay_Cash, IGTF, total], BCV_Rate)
             print_Bill(sub_total, IVA, pay_Cash, IGTF, total)
+        elif convert_to_bolivars.lower() == 'n':
+            pass
+        else:
+            print('Select a Valid Option...')
     elif len(main_Question) == 1 and main_Question.lower() == 'n' and agent_of_retention.lower() == 'y':
         
         reten_Results = calc_Retention(sub_total,IVA)
         reten_IVA, reten_Total = reten_Results
         print_Reten_Bill(sub_total, reten_IVA, 0,0,reten_Total)
-
+        convert_to_bolivars = input('\nDo you wanna convert theese values to Bolivars? (Y/N): ')
+        if convert_to_bolivars.lower() == 'y':
+            sub_total, IVA, pay_Cash, IGTF, total = convert_to_Bolivars([sub_total,IVA, 0, 0, total], BCV_Rate)
+            print_Bill(sub_total, IVA, pay_Cash, IGTF, total)
+        elif convert_to_bolivars.lower() == 'n':
+            pass
+        else:
+            print('Select a Valid Option...')
     elif len(main_Question) == 1 and main_Question.lower() == 'n' and agent_of_retention.lower() == 'n':
         print_Bill(sub_total, IVA, 0,0,total)
+        convert_to_bolivars = input('\nDo you wanna convert theese values to Bolivars? (Y/N): ')
+        if convert_to_bolivars.lower() == 'y':
+            sub_total, IVA, pay_Cash, IGTF, total = convert_to_Bolivars([sub_total,IVA, 0, 0, total], BCV_Rate)
+            print_Bill(sub_total, IVA, pay_Cash, IGTF, total)
+        elif convert_to_bolivars.lower() == 'n':
+            pass
+        else:
+            print('Select a Valid Option...')
     else:
         print('Please select a valid option...')
 
