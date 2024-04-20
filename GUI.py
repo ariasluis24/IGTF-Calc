@@ -7,7 +7,7 @@ import os, src.calculations as calculations
 user_name = os.getlogin()
 result_height = 14 # Used into the Labels.
 
-
+# TODO Print into the window if the client is goint to pay in $ and if the client is agent of retention.
 def get_sub_total():
     """
     # This function works in the next way.

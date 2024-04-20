@@ -1,7 +1,7 @@
 # Import to set the locale system for the decimal(,) and thousand(.) separators.
 import locale, datetime
 from decimal import Decimal
-from scrap_price_BCV import price_BCV
+from src.scrap_price_BCV import price_BCV
 locale.setlocale(locale.LC_ALL, 'en_DE')
 BCV_Rate = price_BCV
 
@@ -13,14 +13,14 @@ def principal_Calculation(sub_total):
 def GUI_principal_Calculation(sub_total, IVA, total):
     return f'''
     ***************NORMAL BILL********************
-    Sub-Total:    {round(Decimal(sub_total),2):n}
-     IVA(16%):      {round(Decimal(IVA),2):n}
+    Sub-Total:     {round(Decimal(sub_total),2):n}
+     IVA (16%):      {round(Decimal(IVA),2):n}
         Total:    {round(Decimal(total),2):n}
 
     ***************RETAINED BILL******************
     Sub-Total:    {round(Decimal(sub_total),2):n}
-    IVA(16%):      {round(Decimal(IVA),2):n}
-    Retained IVA:        {round(Decimal(IVA*0.25),2):n}
+    IVA (16%):      {round(Decimal(IVA),2):n}
+    Retained IVA (25%):       {round(Decimal(IVA*0.25),2):n}
     Total:    {round(Decimal(sub_total) + Decimal(IVA*0.25),2):n}
     '''
     
@@ -48,7 +48,6 @@ def rest_to_Pay(pay_Cash, IGTF,total):
     print('******************************\n')
     pass
 
-# WIP make a loop question asking for a yes or no to convert into bolivars and select a valid option if the answer is not valid.
 def main_Function():
     # rest_to_Pay(pay_Cash, IGTF,reten_Total)    
     pass
@@ -68,11 +67,11 @@ def GUI_print_Bill(sub_total, IVA, pay_Cash,IGTF, total):
 def GUI_print_Reten_Bill(sub_total, reten_IVA, pay_Cash,IGTF,reten_Total):
     return f"""
     ***************FINAL RETENTION BILL********************
-    Sub-Total:     ${round(Decimal(sub_total),2):n}
-    IVA (25%):          ${round(Decimal(reten_IVA),2):n}
-    $ Payment:          ${round(Decimal(pay_Cash),2):n}
-     IGTF(3%):          ${round(Decimal(IGTF),2):n}
-        Total:     ${round(Decimal(reten_Total) + Decimal(IGTF),2):n}\n"""
+    Sub-Total:      ${round(Decimal(sub_total),2):n}
+    IVA (25%):         ${round(Decimal(reten_IVA),2):n}
+    $ Payment:         ${round(Decimal(pay_Cash),2):n}
+     IGTF(3%):         ${round(Decimal(IGTF),2):n}
+        Total:    ${round(Decimal(reten_Total) + Decimal(IGTF),2):n}\n"""
 
 def convert_to_Bolivars(data, BCV_Rate):
     my_values = []
