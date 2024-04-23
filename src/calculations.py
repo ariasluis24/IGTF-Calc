@@ -1,9 +1,7 @@
 # Import to set the locale system for the decimal(,) and thousand(.) separators.
-import locale, datetime
+import locale
 from decimal import Decimal
-from scrap_price_BCV import price_BCV
 locale.setlocale(locale.LC_ALL, 'en_DE')
-BCV_Rate = price_BCV
 
 def principal_Calculation(sub_total):
     IVA = sub_total * 0.16
@@ -20,11 +18,12 @@ def GUI_principal_Calculation(sub_total, IVA, total):
     ***************RETAINED BILL******************
     Sub-Total:    {round(Decimal(sub_total),2):n}
     IVA(16%):      {round(Decimal(IVA),2):n}
-    Retained IVA:        {round(Decimal(IVA*0.25),2):n}
-    Total:    {round(Decimal(sub_total) + Decimal(IVA*0.25),2):n}
+    Retained IVA (75%):      {round(Decimal(IVA*0.75),2):n}
+    Total to pay:       {round(Decimal(sub_total) + Decimal(IVA*0.25),2):n}
     '''
     
 def txt_Bill(sub_total, IVA, total):
+    from main import date # Test import for further work WIP.
     return f'''                 Date:{date} Client: -
                 ***************NORMAL BILL***************************RETAINED BILL******************
             Sub-Total:    {round(Decimal(sub_total),2):n}          *              Sub-Total:    {round(Decimal(sub_total),2):n}
@@ -47,14 +46,6 @@ def rest_to_Pay(pay_Cash, IGTF,total):
     print(f'The rest to pay is: {round((Decimal(total) + Decimal(IGTF)) - Decimal(pay_Cash),2):n}')
     print('******************************\n')
     pass
-
-# WIP make a loop question asking for a yes or no to convert into bolivars and select a valid option if the answer is not valid.
-def main_Function():
-    # rest_to_Pay(pay_Cash, IGTF,reten_Total)    
-    pass
-
-
-# TODO Use just one format for the bill, switching the iva percentage and value, depending if the user wants to calculate the retention of the iva.
 
 def GUI_print_Bill(sub_total, IVA, pay_Cash,IGTF, total):
     return f"""
