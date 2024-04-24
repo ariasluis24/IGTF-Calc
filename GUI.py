@@ -177,7 +177,7 @@ user = Label(window,
              text=user_name, 
              font=('Roboto', 24), 
              activebackground='blue')
-version = Label(window, text='Version: alpha-1.01')
+version = Label(window, text='Version: alpha-1.02')
 
 # Creating Buttons
 calculate_button = Button(window, text='Calculate', command=get_sub_total, width=15)
