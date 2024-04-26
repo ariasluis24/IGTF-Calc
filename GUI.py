@@ -1,12 +1,17 @@
 from tkinter import *
 from tkinter import simpledialog
-import tkinter.messagebox, os, threading
+import tkinter.messagebox, os, threading, time
 import src.calculations as calculations
 from src.scrap_price_BCV import scraping_BCV
+# TODO work on how to handle exceptions. 
+# TODO Show selected options (agent_of_retention, main_question)
+# TODO Show BCV Price with date.
 # Variables
+# TODO Look for a way to get the value of the thread or look video on multitasking.
 x = threading.Thread(target=scraping_BCV, args=())
-BCV_Price = scraping_BCV() 
 x.start()
+print(x.join())
+BCV_Price = scraping_BCV()
 user_name = os.getlogin()
 result_height = 14 # Used into the Labels.
 
@@ -201,4 +206,7 @@ window.rowconfigure(4, weight= 10, uniform= 'a')
 # window.rowconfigure(2, weight=3, uniform='b')
 
 # Run
+print("Ejecucion del GUI: ")
+print(time.process_time())
+print(threading.active_count())
 window.mainloop()

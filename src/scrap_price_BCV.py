@@ -1,5 +1,5 @@
 # Imported requests, urllib3 & BeatifulSoup to successfully scrap the price of the BCV Page
-import requests, urllib3
+import requests, urllib3, time
 urllib3.disable_warnings()
 from bs4 import BeautifulSoup
 def scraping_BCV():
@@ -15,6 +15,7 @@ def scraping_BCV():
 
     str_BCV = ''.join(list_BCV) # Formating list into a single string 36.18830000.
     price_BCV = float(str_BCV) # Casting string into a float.
-
+    print('Ejecucion del scrap BCV')
+    print(time.process_time())
     return price_BCV
     # print(price_BCV) # Result = 36.1883
