@@ -1,20 +1,20 @@
 from tkinter import *
 from tkinter import simpledialog
-import tkinter.messagebox, os, threading, time
+from multiprocessing import Process, Queue
+import tkinter.messagebox, os, time
 import src.calculations as calculations
-from src.scrap_price_BCV import scraping_BCV
-# TODO work on how to handle exceptions. 
-# TODO Show selected options (agent_of_retention, main_question)
-# TODO Show BCV Price with date.
-# Variables
-# TODO Look for a way to get the value of the thread or look video on multitasking.
-x = threading.Thread(target=scraping_BCV, args=())
-x.start()
-print(x.join())
-BCV_Price = scraping_BCV()
-user_name = os.getlogin()
-result_height = 14 # Used into the Labels.
+import datetime
 
+inicio = time.time()
+# TODO work on how to handle exceptions. 
+#// TODO Show selected options (agent_of_retention, main_question)
+#// TODO Show BCV Price with date. check
+# Variables
+#// TODO Look for a way to get the value of the thread or look video on multitasking.
+now = datetime.datetime.now()
+date = now.strftime("%d-%m-%y")
+user_name = os.getlogin()
+result_height = 14 # Used into the height of the Labels.
 # WIP make the sub_total Entry work only if a valid value.
 # Try to use Try and Exception ValueError.
 def get_sub_total():
@@ -67,11 +67,14 @@ def get_sub_total():
     
     IVA, total = calculations.principal_Calculation(sub_total_float)
     principal_calculation = calculations.GUI_principal_Calculation(sub_total_float, IVA, total)
-    Label(window, text=principal_calculation, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=60, height=result_height, relief='solid' ).grid(row=3)
+    Label(window, text=principal_calculation, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=60, height=result_height, relief='solid' ).grid(row=5)
     main_question = tkinter.messagebox.askquestion('',"This bill is going to be cancel with $?")
     agent_of_retention = tkinter.messagebox.askquestion('', "Do you wanna calculate the retention?")
     
     if main_question == 'yes' and agent_of_retention == 'yes':
+        agent_of_retention_label_answer.config(text='YES', bg='green')
+        igtf_label_answer.config(text='YES', bg='green')
+
         pay_cash = simpledialog.askfloat("Input", "Please how much is going to be cancel on $?:")
         
         IGTF = calculations.calc_IGTF(pay_cash)
@@ -79,36 +82,45 @@ def get_sub_total():
         reten_result = calculations.GUI_print_Reten_Bill(sub_total_float, reten_IVA, pay_cash, IGTF, reten_Total)
         my_list = [sub_total_float, IVA, pay_cash, IGTF, total]
 
-        Label(window, text=reten_result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 3, column=1)
+        Label(window, text=reten_result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 5, column=1)
         change_rate_button.config(state='normal')
         
     elif main_question == 'yes' and agent_of_retention == 'no':
+        agent_of_retention_label_answer.config(text='NO', bg='red')
+        igtf_label_answer.config(text='YES', bg='green')
+
         pay_cash = simpledialog.askfloat("Input", "Please how much is going to be cancel on $?:")
 
         IGTF = calculations.calc_IGTF(pay_cash)
         result = calculations.GUI_print_Bill(sub_total_float, IVA, pay_cash, IGTF, total) 
         my_list = [sub_total_float, IVA, pay_cash, IGTF, total]
 
-        Label(window, text=result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 3, column=1)
+        Label(window, text=result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 5, column=1)
         change_rate_button.config(state='normal')
     
     elif main_question == 'no' and agent_of_retention == 'yes':
+        agent_of_retention_label_answer.config(text='YES', bg='green')
+        igtf_label_answer.config(text='NO', bg='red')
+
         reten_IVA, reten_Total = calculations.calc_Retention(sub_total_float, IVA)
         reten_result = calculations.GUI_print_Reten_Bill(sub_total_float,reten_IVA,0,0,reten_Total)
         my_list = [sub_total_float, IVA, 0, 0, total]
 
-        Label(window, text=reten_result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 3, column=1)
+        Label(window, text=reten_result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 5, column=1)
         change_rate_button.config(state='normal')
     
     elif main_question == 'no' and agent_of_retention == 'no':
+        agent_of_retention_label_answer.config(text='NO', bg='red')
+        igtf_label_answer.config(text='NO', bg='red')
+
         result = calculations.GUI_print_Bill(sub_total_float, IVA, 0, 0, total)
         my_list = [sub_total_float, IVA, 0, 0, total]
 
-        Label(window, text=result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 3, column=1)
+        Label(window, text=result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 5, column=1)
         change_rate_button.config(state='normal')
 
 # WIP Fix documentation of the function.
-def clicked(): 
+def clicked(BCV_Price): 
     """ 
     This function works in the next way. 
     Is called on the button command of 'chang_rate_button'.
@@ -143,12 +155,33 @@ def clicked():
     if agent_of_retention == 'no':
         sub_total_BS,  IVA_BS, pay_cash_BS, IGTF_BS, total_BS = calculations.convert_to_Bolivars(my_list, BCV_Price)
         results_BS = calculations.GUI_print_Bill(sub_total_BS ,IVA_BS, pay_cash_BS, IGTF_BS, total_BS)
-        Label(window, text=results_BS, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 3, column=1)
+        Label(window, text=results_BS, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 5, column=1)
 
     if agent_of_retention == 'yes':
         sub_total_BS,  IVA_BS, pay_cash_BS, IGTF_BS, total_BS = calculations.convert_to_Bolivars(my_list, BCV_Price)
         results_reten_BS = calculations.GUI_print_Reten_Bill(sub_total_BS ,IVA_BS, pay_cash_BS, IGTF_BS, total_BS)
-        Label(window, text=results_reten_BS, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 3, column=1)
+        Label(window, text=results_reten_BS, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow').grid(row= 5, column=1)
+
+def delete():
+    sub_total.delete(0,END)
+
+def update():
+    # window.after(1000, update) #Constanly updates the config of the price label and change_rate_button. 
+    # print('HOla') Debbuger 
+    
+    # Scrap code
+    # Queue to find the result on the scraping of the BCV price when is done.
+    Q = Queue()
+    import src.scrap_price_BCV as BCV
+    scrap = Process(target=BCV.scraping_BCV, args=(Q,))
+    scrap.start()
+    BCV_Price = Q.get()
+    scrap.kill()
+    
+    # Update labels with scrap BCV Price.
+    price.config(text=f'Date: {date} BCV: {BCV_Price}', font=('Roboto', 10, 'bold'))
+    change_rate_button.config(command=lambda: clicked(BCV_Price))  
+
 
 # Windows entity  
 window = Tk()
@@ -157,7 +190,9 @@ window = Tk()
 icon = PhotoImage(file='src\\icon.png')
 window.title('IGTF Calculator')
 window.iconphoto(True, icon)
-window.geometry('800x360')
+window.geometry('800x370') # Default size of the window
+window.minsize(800, 370) # Minimun size of the window
+window.maxsize(800, 370) # Maximun size of the window
 
 # Creating Labels
 question = Label(window, 
@@ -168,7 +203,7 @@ question = Label(window,
 sub_total = Entry(window, 
                   font=('Arial', 18),
                   width=20,
-                  bg='red',
+                  bg='yellow',
                   justify='center')
 result = Label(window, 
                 text='result',
@@ -178,35 +213,58 @@ result = Label(window,
                 anchor='w',
                 bg='red',
                 width=50  )
+agent_of_retention_label = Label(window, text='AGENT OF RETENTION: ', font=('Roboto', 11))
+agent_of_retention_label_answer = Label(window, text='', font=('Roboto', 12, 'bold') )
+igtf_label = Label(window, text='IGTF: ', font=('Roboto', 11) )
+igtf_label_answer = Label(window, text='', font=('Roboto', 12, 'bold'))
 user = Label(window, 
              text=user_name, 
              font=('Roboto', 24), 
              activebackground='blue')
-version = Label(window, text='Version: alpha-1.02')
+version = Label(window, text='Version: alpha-1.020')
+price = Label(window, text='Loading...')
 
 # Creating Buttons
-calculate_button = Button(window, text='Calculate', command=get_sub_total, width=15)
-delete_button = Button(window, text='Deleted')
-export_button = Button(window, text='Export')
-change_rate_button = Button(window, text='$ / BS', font=('Roboto', 12), command=clicked, state=DISABLED)
+calculate_button = Button(window, text='Calculate', command=get_sub_total, width=10)
+delete_button = Button(window, text='Delete', command=delete,width=10)
+export_button = Button(window, text='Export') # TODO Make a way to expor the calculation into a pdf or txt file.
+change_rate_button = Button(window, text='$ / BS', font=('Roboto', 12),command='' ,state=DISABLED)
 
 # Position of Widgets
 question.grid(row=0 , column=0, sticky='nwse')
-sub_total.grid(row=1, column=0, sticky='nwe')
-sub_total.focus_set() # Focus the entry on the window to instanly put a value.
-calculate_button.grid(row=2, column=0, sticky='nwse')
-change_rate_button.grid(row=5, column=1, padx= 2, pady=2, sticky='se')
-version.grid(row=5, column=0, sticky='ws')
+sub_total.grid(row=1, column=0, pady=5,sticky='ns')
+
+agent_of_retention_label.grid(row=0, column=1,sticky='w')
+agent_of_retention_label_answer.grid(row=0, column=1, padx=173, sticky='w' )
+igtf_label.grid(row=1, column=1, sticky='w')
+igtf_label_answer.grid(row=1, column=1, padx=45, sticky='w')
+
+calculate_button.grid(row=2, column=0, padx=110,sticky='es')
+delete_button.grid(row=2, column=0, padx=110,sticky='ws')
+
+change_rate_button.grid(row=6, column=1, padx= 2, pady=2, sticky='se')
+version.grid(row=6, column=0, sticky='ws', )
+price.grid(row=6, column=0, sticky='es')
 
 # Config Grid of the window
+sub_total.focus_set() # Focus the entry on the window to instanly put a value.
 window.columnconfigure((0,1), weight= 1, uniform= 'a')
 window.rowconfigure(4, weight= 10, uniform= 'a')
 # window.rowconfigure(0, weight=1, uniform='b')
 # window.rowconfigure(1, weight=1, uniform='b')
 # window.rowconfigure(2, weight=3, uniform='b')
 
-# Run
-print("Ejecucion del GUI: ")
-print(time.process_time())
-print(threading.active_count())
-window.mainloop()
+if __name__ == '__main__':
+    # Debugger timer to calc init of the mainloop
+    final = time.time()
+    print("Ejecucion del GUI: ")
+    print(final - inicio)
+
+    
+
+    
+    # Update price label with the scraped BCV Price.
+    window.after(1000, update)
+
+    #Runs window.
+    window.mainloop()
