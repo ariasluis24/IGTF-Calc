@@ -7,7 +7,7 @@ import src.calculations as calculations
 
 inicio = time.time()
 # TODO work on how to handle exceptions. 
-#// TODO Show selected options (agent_of_retention, main_question)
+#// TODO Show selected options (agent_of_retention, igtf_question)
 #// TODO Show BCV Price with date. check
 # Variables
 #// TODO Look for a way to get the value of the thread or look video on multitasking.
@@ -28,7 +28,7 @@ def get_sub_total():
    
     Is called on the button command of 'calculate_button'.\n
     
-    Create 3 global variables (my_list, main_question, agent_of_retention).\n
+    Create 3 global variables (my_list, igtf_question, agent_of_retention).\n
     
     Gets the value of the entry 'sub_total'. Converts the value into float and storage it into the 'sub_total_float' variable.\n
     
@@ -42,9 +42,9 @@ def get_sub_total():
     The label contains its own configuration such as font, border, width, height, relief. And its put it into the window 
     using grid.\n
     
-    2 tkinter.messageboxes, asking a yes/no question are created saving their return values into the 2 global variables (main_question, agent_of_retention) for further use.\n
+    2 tkinter.messageboxes, asking a yes/no question are created saving their return values into the 2 global variables (igtf_question, agent_of_retention) for further use.\n
     
-    Depending on the values of the tkinter.messageboxes (main_question, agent_of_retention), the program would ask using a simpledialog for a value, which is goin
+    Depending on the values of the tkinter.messageboxes (igtf_question, agent_of_retention), the program would ask using a simpledialog for a value, which is goin
     to be saved into the variable 'pay_cash' as a float.\n
     
     Then we again call the calculations module this time to use the 'calc_IGTF' function, and save its value into the variable 'IGTF'.\n
@@ -61,23 +61,25 @@ def get_sub_total():
     
     After the label is shown into the window the state of the 'change_rate_button' is change from: DISABLE into 'normal'.\n
 
-    The rest of the function is the same but, depending on the values of the 'main_question' & 'agent_of_retention' tkinter.messageboxes.
+    The rest of the function is the same but, depending on the values of the 'igtf_question' & 'agent_of_retention' tkinter.messageboxes.
     It would use the module calculations 'GUI_print_Reten_Bill' or 'GUI_print__Bill'.\n
     Saving an individual 'my_list' for each case, to be use later into the function 'convert_bs_dollars'.
 
     """
 
-    global my_list, main_question, agent_of_retention, princial_result_label, total_result_label
+    global my_list, igtf_question, agent_of_retention, principal_result_label, total_result_label
     sub_total_float = float(sub_total.get())
     
     IVA, total = calculations.principal_Calculation(sub_total_float)
     principal_calculation = calculations.GUI_principal_Calculation(sub_total_float, IVA, total)
-    princial_result_label = Label(window, text=principal_calculation, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=60, height=result_height, relief='solid' )
-    princial_result_label.grid(row=5)
-    main_question = tkinter.messagebox.askquestion('',"This bill is going to be cancel with $?")
+    
+    principal_result_label.config(text=principal_calculation)
+    principal_result_label.grid(column=0, row=5)
+    
+    igtf_question = tkinter.messagebox.askquestion('',"This bill is going to be cancel with $?")
     agent_of_retention = tkinter.messagebox.askquestion('', "Do you wanna calculate the retention?")
     
-    if main_question == 'yes' and agent_of_retention == 'yes':
+    if igtf_question == 'yes' and agent_of_retention == 'yes':
         agent_of_retention_label_answer.config(text='YES', bg='green')
         igtf_label_answer.config(text='YES', bg='green')
 
@@ -88,11 +90,12 @@ def get_sub_total():
         reten_result = calculations.GUI_print_Reten_Bill(sub_total_float, reten_IVA, pay_cash, IGTF, reten_Total)
         my_list = [sub_total_float, IVA, pay_cash, IGTF, total]
 
-        total_result_label = Label(window, text=reten_result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
+        total_result_label.config(text=reten_result)
         total_result_label.grid(row= 5, column=1)
+        
         change_rate_button.config(state='normal')
         
-    elif main_question == 'yes' and agent_of_retention == 'no':
+    elif igtf_question == 'yes' and agent_of_retention == 'no':
         agent_of_retention_label_answer.config(text='NO', bg='red')
         igtf_label_answer.config(text='YES', bg='green')
 
@@ -102,11 +105,12 @@ def get_sub_total():
         result = calculations.GUI_print_Bill(sub_total_float, IVA, pay_cash, IGTF, total) 
         my_list = [sub_total_float, IVA, pay_cash, IGTF, total]
 
-        total_result_label = Label(window, text=result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
+        total_result_label.config(text=result)
         total_result_label.grid(row= 5, column=1)
+
         change_rate_button.config(state='normal')
     
-    elif main_question == 'no' and agent_of_retention == 'yes':
+    elif igtf_question == 'no' and agent_of_retention == 'yes':
         agent_of_retention_label_answer.config(text='YES', bg='green')
         igtf_label_answer.config(text='NO', bg='red')
 
@@ -114,22 +118,25 @@ def get_sub_total():
         reten_result = calculations.GUI_print_Reten_Bill(sub_total_float,reten_IVA,0,0,reten_Total)
         my_list = [sub_total_float, IVA, 0, 0, total]
 
-        total_result_label = Label(window, text=reten_result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
+        total_result_label.config(text=reten_result)
         total_result_label.grid(row= 5, column=1)
+        
         change_rate_button.config(state='normal')
     
-    elif main_question == 'no' and agent_of_retention == 'no':
+    elif igtf_question == 'no' and agent_of_retention == 'no':
         agent_of_retention_label_answer.config(text='NO', bg='red')
         igtf_label_answer.config(text='NO', bg='red')
 
         result = calculations.GUI_print_Bill(sub_total_float, IVA, 0, 0, total)
         my_list = [sub_total_float, IVA, 0, 0, total]
 
-        total_result_label = Label(window, text=result, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
+        total_result_label.config(text=result)
         total_result_label.grid(row= 5, column=1)
+        
         change_rate_button.config(state='normal')
 
 # WIP Fix documentation of the function.
+# TODO Investigate bug symbol displayed on convertion button when a convertion has already been done.
 def convert_bs_dollars(BCV_Price): 
     """ 
     This function works in the next way. 
@@ -140,7 +147,7 @@ def convert_bs_dollars(BCV_Price):
     Case 1 'agent_of_retention' == 'no':
         It would call the calculations module 
         to use the 'convert_to_bolivars' function using the variables 'my_list' & 'BCV_Price' as arguments,
-        ('my_list' values would depend on the selection of 'main_question' & 'agent_of_retention' on the previous function).
+        ('my_list' values would depend on the selection of 'igtf_question' & 'agent_of_retention' on the previous function).
         saving the return values into a separate variables (sub_total_BS,  IVA_BS, pay_cash_BS, IGTF_BS, total_BS).
         
         Then calling again the calculations module we would use the 'GUI_print_Bill'. Using as arguments the separate variables
@@ -152,7 +159,7 @@ def convert_bs_dollars(BCV_Price):
     Case 2 'agent_of_retention' == 'yes':
         It would call the calculations module 
         to use the 'convert_to_bolivars' function using the variables 'my_list' & 'BCV_Price' as arguments,
-        ('my_list' values would depend on the selection of 'main_question' & 'agent_of_retention' on the previous function).
+        ('my_list' values would depend on the selection of 'igtf_question' & 'agent_of_retention' on the previous function).
         saving the return values into a separate variables (sub_total_BS,  IVA_BS, pay_cash_BS, IGTF_BS, total_BS).
         
         Then calling again the calculations module we would use the 'GUI_print_Reten_Bill'. Using as arguments the separate variables
@@ -161,47 +168,68 @@ def convert_bs_dollars(BCV_Price):
         Then created a Label similiar to the previous function, replacing those values with the converted ones.
     
     """
-    global converted, total_result_label_BS
+    global converted, total_result_label
 
     if agent_of_retention == 'no' and converted == False:
+        change_rate_button.config(text='$')
+        
+        converted = True
+        
         sub_total_BS,  IVA_BS, pay_cash_BS, IGTF_BS, total_BS = calculations.convert_to_Bolivars(my_list, BCV_Price)
         results_BS = calculations.GUI_print_Bill(sub_total_BS ,IVA_BS, pay_cash_BS, IGTF_BS, total_BS)
-        total_result_label_BS = Label(window, text=results_BS, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
-        total_result_label_BS.grid(row= 5, column=1)
-        change_rate_button.config(text='$')
-        converted = True
+        
+        total_result_label.config(text=results_BS)
+        total_result_label.grid(row= 5, column=1)
+        
 
     elif agent_of_retention == 'yes' and converted == False:
+        change_rate_button.config(text='$')
+        
+        converted = True
+        
         sub_total_BS,  IVA_BS, pay_cash_BS, IGTF_BS, total_BS = calculations.convert_to_Bolivars(my_list, BCV_Price)
         results_reten_BS = calculations.GUI_print_Reten_Bill(sub_total_BS ,IVA_BS, pay_cash_BS, IGTF_BS, total_BS)
-        total_result_label_BS = Label(window, text=results_reten_BS, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
-        total_result_label_BS.grid(row= 5, column=1)
-        change_rate_button.config(text='$')
-        converted = True
+        
+        total_result_label.config(text=results_reten_BS)
+        total_result_label.grid(row= 5, column=1)
+        
     
     elif agent_of_retention == 'no' and converted == True:
         change_rate_button.config(text='Bs')
-        sub_total,  IVA, pay_cash, IGTF, total = my_list
-        results = calculations.GUI_print_Bill(sub_total ,IVA, pay_cash, IGTF, total)
-        total_result_label_BS = Label(window, text=results, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
-        total_result_label_BS.grid(row= 5, column=1)
+        
         converted = False
+        
+        sub_total,  IVA, pay_cash, IGTF, total = my_list 
+        results = calculations.GUI_print_Bill(sub_total ,IVA, pay_cash, IGTF, total)
+        
+        total_result_label.config(text=results)
+        total_result_label.grid(row= 5, column=1)
+        
 
     
     elif agent_of_retention == 'yes' and converted == True:
         change_rate_button.config(text='Bs')
+        
+        converted = False
+        
         sub_total,  IVA, pay_cash, IGTF, total = my_list
         results_reten = calculations.GUI_print_Reten_Bill(sub_total ,IVA, pay_cash, IGTF, total)
-        total_result_label_BS = Label(window, text=results_reten, font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
-        total_result_label_BS.grid(row= 5, column=1)
-        converted = False
+        
+        total_result_label.config(text=results_reten)
+        total_result_label.grid(row= 5, column=1)
+
   
 def delete():
+    global converted, total_result_label
+    
     sub_total.delete(0,END)
-    total_result_label.config(text='', borderwidth=0, bg='#f1f1f0')
-    total_result_label_BS.config(text='', borderwidth=0, bg='#f1f1f0')
-    princial_result_label.config(text='', borderwidth=0)
-    change_rate_button.config(state='disabled')
+    # total_result_label.config(text='', borderwidth=0, bg='#f1f1f0')
+    principal_result_label.grid_forget()
+    total_result_label.grid_forget()
+
+    change_rate_button.config(text='$', state='disabled')
+    
+    converted = False
 
 def update():
     # window.after(1000, update) #Constanly updates the config of the price label and change_rate_button. 
@@ -214,7 +242,9 @@ def update():
         BCV_Price = float(config['BCV_Price']['bcv_price'])
         
         # Update labels with scrap BCV Price.
-        price.config(text=f'Date: {date_actual} BCV: {BCV_Price}', font=('Roboto', 10, 'bold'))
+        price.config(text=f'Date: {date_actual} BCV: {BCV_Price:.5f}', font=('Roboto', 10, 'bold'))
+        
+        # Adds function to the change rate button.
         change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price))  
     
     else:
@@ -265,6 +295,8 @@ agent_of_retention_label = Label(window, text='AGENT OF RETENTION: ', font=('Rob
 agent_of_retention_label_answer = Label(window, text='', font=('Roboto', 12, 'bold') )
 igtf_label = Label(window, text='IGTF: ', font=('Roboto', 11) )
 igtf_label_answer = Label(window, text='', font=('Roboto', 12, 'bold'))
+principal_result_label = Label(window, text='', font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=60, height=result_height, relief='solid' )
+total_result_label = Label(window, text='', font=('Roboto', 10), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
 user = Label(window, 
              text=user_name, 
              font=('Roboto', 24), 
