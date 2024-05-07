@@ -136,7 +136,7 @@ def get_sub_total():
         change_rate_button.config(state='normal')
 
 # WIP Fix documentation of the function.
-# TODO Investigate bug symbol displayed on convertion button when a convertion has already been done.
+#/// TODO Investigate bug symbol displayed on convertion button when a convertion has already been done.
 def convert_bs_dollars(BCV_Price): 
     """ 
     This function works in the next way. 
@@ -227,7 +227,7 @@ def delete():
     principal_result_label.grid_forget()
     total_result_label.grid_forget()
 
-    change_rate_button.config(text='$', state='disabled')
+    change_rate_button.config(text='Bs', state='disabled')
     
     converted = False
 
@@ -308,7 +308,7 @@ price = Label(window, text='Loading...')
 calculate_button = Button(window, text='Calculate', command=get_sub_total, width=10)
 delete_button = Button(window, text='Delete', command=delete,width=10)
 export_button = Button(window, text='Export') # TODO Make a way to expor the calculation into a pdf or txt file.
-change_rate_button = Button(window, text='BS', font=('Roboto', 12),command='' , width=5, state=DISABLED) # TODO Make changable values between BS/$
+change_rate_button = Button(window, text='Bs', font=('Roboto', 12),command='' , width=5, state=DISABLED) # TODO Make changable values between BS/$
 
 # Position of Widgets
 question.grid(row=0 , column=0, sticky='nwse')
