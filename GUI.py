@@ -6,9 +6,16 @@ import tkinter.messagebox, os, time, datetime
 import src.calculations as calculations
 
 inicio = time.time()
-# TODO work on how to handle exceptions. 
+# TODO work on how to handle exceptions.
+# TODO Reasign functions on GUI.py to indivual modules.
+# TODO Rename GUI.py to main.py (If necessary).
+# TODO Create dictionaries to use them for localization (EN & ES).
+# TODO Create menu list, to display language, and more utilities. 
+# TODO Create module to calculate the total of a retention bill using the amount pay by the client.
+# TODO Create module to calculate what price an item should had dependeding in how many items the order has to obtain a total given by the payer.
+# TODO Check if it is necessary to add those modules to the IGTF-Calc or make them independet, or have 2 versions.
 #// TODO Show selected options (agent_of_retention, igtf_question)
-#// TODO Show BCV Price with date. check
+#// TODO Show BCV Price with date.
 # Variables
 #// TODO Look for a way to get the value of the thread or look video on multitasking.
 config = ConfigParser()
@@ -68,6 +75,11 @@ def get_sub_total():
     """
 
     global my_list, igtf_question, agent_of_retention, principal_result_label, total_result_label
+    
+    change_rate_button.config(text='Bs')
+    global converted
+    converted = False
+    
     sub_total_float = float(sub_total.get())
     
     IVA, total = calculations.principal_Calculation(sub_total_float)
