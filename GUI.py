@@ -9,8 +9,7 @@ import os, time, datetime
 
 
 inicio = time.time()
-# TODO work on how to handle exceptions.
-# TODO work on how to handle exceptions.
+# TODO work on how to handle exceptions
 # ///TODO Reasign functions on GUI.py to indivual modules.
 # TODO Rename GUI.py to main.py (If necessary).
 # TODO Create dictionaries to use them for localization (EN & ES).
