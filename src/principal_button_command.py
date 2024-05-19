@@ -1,10 +1,25 @@
 from tkinter import *
-import tkinter.messagebox
 from tkinter import simpledialog
+from configparser import ConfigParser
+import tkinter.messagebox
 import src.calculations as calculations
+
 
 # Variables
 converted = False
+
+
+config = ConfigParser()
+file = 'src\\config.ini'
+config.read(file)
+
+if config['Language']['lang'] == 'es':
+    from src.lang.language import spanish
+    lang = spanish
+
+elif config['Language']['lang'] == 'en':
+    from src.lang.language import english
+    lang = english
 
 # TODO WIP make the sub_total Entry work only if a valid value.
 # TODO Try to use Try and Exception ValueError.
@@ -64,18 +79,18 @@ def get_sub_total(principal_result_label, total_result_label, agent_of_retention
     principal_result_label.config(text=principal_calculation)
     principal_result_label.grid(row=5)
     
-    igtf_question = tkinter.messagebox.askquestion('',"This bill is going to be cancel with $?")
-    agent_of_retention = tkinter.messagebox.askquestion('', "Do you wanna calculate the retention?")
+    igtf_question = tkinter.messagebox.askquestion('',lang['IGTF Question'])
+    agent_of_retention = tkinter.messagebox.askquestion('', lang['Retention Question'])
     
     change_rate_button.config(text='Bs')   
     converted = False
 
     if igtf_question == 'yes' and agent_of_retention == 'yes':
         
-        agent_of_retention_label_answer.config(text='YES', bg='green')
-        igtf_label_answer.config(text='YES', bg='green')
+        agent_of_retention_label_answer.config(text=lang['Retention Yes'], bg='green')
+        igtf_label_answer.config(text=lang['IGTF Yes'], bg='green')
 
-        pay_cash = simpledialog.askfloat("Input", "Please how much is going to be cancel on $?:")
+        pay_cash = simpledialog.askfloat("Input", lang['IGTF Input'])
         
         IGTF = calculations.calc_IGTF(pay_cash)
         reten_IVA, reten_Total = calculations.calc_Retention(sub_total_float, IVA)
@@ -89,10 +104,10 @@ def get_sub_total(principal_result_label, total_result_label, agent_of_retention
         
     elif igtf_question == 'yes' and agent_of_retention == 'no':
         
-        agent_of_retention_label_answer.config(text='NO', bg='red')
-        igtf_label_answer.config(text='YES', bg='green')
+        agent_of_retention_label_answer.config(text=lang['Retention No'], bg='red')
+        igtf_label_answer.config(text=lang['IGTF Yes'], bg='green')
 
-        pay_cash = simpledialog.askfloat("Input", "Please how much is going to be cancel on $?:")
+        pay_cash = simpledialog.askfloat("Input", lang['IGTF Input'])
 
         IGTF = calculations.calc_IGTF(pay_cash)
         result = calculations.GUI_print_Bill(sub_total_float, IVA, pay_cash, IGTF, total) 
@@ -105,8 +120,8 @@ def get_sub_total(principal_result_label, total_result_label, agent_of_retention
     
     elif igtf_question == 'no' and agent_of_retention == 'yes':
         
-        agent_of_retention_label_answer.config(text='YES', bg='green')
-        igtf_label_answer.config(text='NO', bg='red')
+        agent_of_retention_label_answer.config(text=lang['Retention Yes'], bg='green')
+        igtf_label_answer.config(text=lang['IGTF No'], bg='red')
 
         reten_IVA, reten_Total = calculations.calc_Retention(sub_total_float, IVA)
         reten_result = calculations.GUI_print_Reten_Bill(sub_total_float,reten_IVA,0,0,reten_Total)
@@ -119,8 +134,8 @@ def get_sub_total(principal_result_label, total_result_label, agent_of_retention
     
     elif igtf_question == 'no' and agent_of_retention == 'no':
         
-        agent_of_retention_label_answer.config(text='NO', bg='red')
-        igtf_label_answer.config(text='NO', bg='red')
+        agent_of_retention_label_answer.config(text=lang['Retention No'], bg='red')
+        igtf_label_answer.config(text=lang['IGTF No'], bg='red')
 
         result = calculations.GUI_print_Bill(sub_total_float, IVA, 0, 0, total)
         my_list = [sub_total_float, IVA, 0, 0, total]

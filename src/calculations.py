@@ -1,7 +1,21 @@
 # Import to set the locale system for the decimal(,) and thousand(.) separators.
 import locale
 from decimal import Decimal
+from configparser import ConfigParser
 locale.setlocale(locale.LC_ALL, 'en_DE')
+
+
+config = ConfigParser()
+file = 'src\\config.ini'
+config.read(file)
+
+if config['Language']['lang'] == 'es':
+    from src.lang.language import spanish
+    lang = spanish
+
+elif config['Language']['lang'] == 'en':
+    from src.lang.language import english
+    lang = english
 
 def principal_Calculation(sub_total):
     IVA = sub_total * 0.16
@@ -10,16 +24,16 @@ def principal_Calculation(sub_total):
 
 def GUI_principal_Calculation(sub_total, IVA, total):
     return f'''
-    ***************NORMAL BILL********************
-    Sub-Total:    {round(Decimal(sub_total),2):n}
-     IVA(16%):      {round(Decimal(IVA),2):n}
-        Total:    {round(Decimal(total),2):n}
+    ***************{lang['Normal Bill']}********************
+    {lang['Sub Total']}:    {round(Decimal(sub_total),2):n}
+    {lang['IVA 1']}:      {round(Decimal(IVA),2):n}
+        {lang['Total']}:    {round(Decimal(total),2):n}
 
-    ***************RETAINED BILL******************
-    Sub-Total:    {round(Decimal(sub_total),2):n}
-    IVA(16%):      {round(Decimal(IVA),2):n}
-    Retained IVA (75%):      {round(Decimal(IVA*0.75),2):n}
-    Total to pay:       {round(Decimal(sub_total) + Decimal(IVA*0.25),2):n}
+    ***************{lang['Retained Bill']}******************
+    {lang['Sub Total']}:    {round(Decimal(sub_total),2):n}
+    {lang['IVA 1']}:      {round(Decimal(IVA),2):n}
+    {lang['IVA Retained']}:      {round(Decimal(IVA*0.75),2):n}
+    {lang['Total to Pay']}:       {round(Decimal(sub_total) + Decimal(IVA*0.25),2):n}
     '''
     
 def txt_Bill(sub_total, IVA, total):
@@ -49,21 +63,21 @@ def rest_to_Pay(pay_Cash, IGTF,total):
 
 def GUI_print_Bill(sub_total, IVA, pay_Cash,IGTF, total):
     return f"""
-    ***************FINAL BILL********************
-    Sub-Total:         ${round(Decimal(sub_total),2):n}
-     IVA(16%):             ${round(Decimal(IVA),2):n}
-      Payment:              ${round(Decimal(pay_Cash),2):n}
-     IGTF(3%):              ${round(Decimal(IGTF),2):n}
-        Total:          ${round(Decimal(total) + Decimal(IGTF),2):n}"""
+    ***************{lang['Final Normal Bill']}********************
+    {lang['Sub Total']}:         ${round(Decimal(sub_total),2):n}
+     {lang['IVA 1']}:             ${round(Decimal(IVA),2):n}
+     {lang['Payment $']}:              ${round(Decimal(pay_Cash),2):n}
+     {lang['IGTF']}:              ${round(Decimal(IGTF),2):n}
+        {lang['Total']}:          ${round(Decimal(total) + Decimal(IGTF),2):n}"""
 
 def GUI_print_Reten_Bill(sub_total, reten_IVA, pay_Cash,IGTF,reten_Total):
     return f"""
-    ***************FINAL RETENTION BILL********************
-    Sub-Total:     ${round(Decimal(sub_total),2):n}
-    IVA (25%):          ${round(Decimal(reten_IVA),2):n}
-    $ Payment:          ${round(Decimal(pay_Cash),2):n}
-     IGTF(3%):          ${round(Decimal(IGTF),2):n}
-        Total:     ${round(Decimal(reten_Total) + Decimal(IGTF),2):n}\n"""
+    ***************{lang['Final Retained Bill']}********************
+    {lang['Sub Total']}:     ${round(Decimal(sub_total),2):n}
+    {lang['IVA 2']}:          ${round(Decimal(reten_IVA),2):n}
+    {lang['Payment $']}:          ${round(Decimal(pay_Cash),2):n}
+     {lang['IGTF']}:          ${round(Decimal(IGTF),2):n}
+        {lang['Total']}:     ${round(Decimal(reten_Total) + Decimal(IGTF),2):n}\n"""
 
 def convert_to_Bolivars(data, BCV_Rate):
     my_values = []

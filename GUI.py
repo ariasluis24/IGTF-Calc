@@ -12,7 +12,7 @@ inicio = time.time()
 # TODO work on how to handle exceptions
 # ///TODO Reasign functions on GUI.py to indivual modules.
 # TODO Rename GUI.py to main.py (If necessary).
-# TODO Create dictionaries to use them for localization (EN & ES).
+# ///TODO Create dictionaries to use them for localization (EN & ES).
 # ///TODO Create menu list, to display language, and more utilities. 
 # ///TODO Create module to calculate the total of a retention bill using the amount pay by the client.
 # TODO Create module to calculate what price an item should had dependeding in how many items the order has to obtain a total given by the payer.
@@ -24,6 +24,16 @@ inicio = time.time()
 config = ConfigParser()
 file = 'src\\config.ini'
 config.read(file)
+
+# Config of language for UI
+if config['Language']['lang'] == 'es':
+    from src.lang.language import spanish
+    lang = spanish
+
+elif config['Language']['lang'] == 'en':
+    from src.lang.language import english
+    lang = english
+
 
 now = datetime.datetime.now()
 date_actual = now.strftime('%d-%m-%y')
@@ -41,7 +51,7 @@ def update():
         BCV_Price = float(config['BCV_Price']['bcv_price'])
         
         # Update labels with scrap BCV Price.
-        price.config(text=f'Date: {date_actual} BCV: {BCV_Price:.5f}', font=('Roboto', 10, 'bold'))
+        price.config(text=f'{lang['Date']}: {date_actual} BCV: {BCV_Price:.5f}', font=('Roboto', 10, 'bold'))
         
         # Adds function to the change rate button.
         change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))  
@@ -56,7 +66,7 @@ def update():
         scrap.kill()
         
         # Update labels with scrap BCV Price.
-        price.config(text=f'Date: {date_actual} BCV: {BCV_Price}', font=('Roboto', 10, 'bold'))
+        price.config(text=f'{lang['Date']}: {date_actual} BCV: {BCV_Price}', font=('Roboto', 10, 'bold'))
         change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))  
 
 
@@ -72,22 +82,27 @@ menubar = Menu(window)
 file_menu =  Menu(menubar, tearoff=0)
 help_menu = Menu(menubar, tearoff=0)
 operation_menu = Menu(menubar, tearoff=0)
+option_menu = Menu(menubar, tearoff=0)
 
-menubar.add_cascade(label='File', menu=file_menu)
-file_menu.add_command(label="New", command=donothing)
-file_menu.add_command(label="Open", command=donothing)
+
+menubar.add_cascade(label=lang['File'], menu=file_menu)
+file_menu.add_command(label=lang['New'], command=donothing)
+file_menu.add_command(label=lang['Open'], command=donothing)
 file_menu.add_separator()
-file_menu.add_command(label="Save", command=donothing)
-file_menu.add_command(label="Save as...", command=donothing)
+file_menu.add_command(label=lang['Save'], command=donothing)
+file_menu.add_command(label=lang['Save As'], command=donothing)
 file_menu.add_separator()
-file_menu.add_command(label="Close", command=donothing)
+file_menu.add_command(label=lang['Close'], command=window.quit)
 
-menubar.add_cascade(label='Operations', menu=operation_menu)
-operation_menu.add_checkbutton(label='IGTF Calculation', command=donothing)
-operation_menu.add_checkbutton(label='Payment of Agent of retention Calculation', command=donothing)
+menubar.add_cascade(label=lang['Operations'], menu=operation_menu)
+operation_menu.add_checkbutton(label=lang['IGTF Calc'], command=donothing)
+operation_menu.add_checkbutton(label=lang['Retention Payment'], command=donothing)
 
-menubar.add_cascade(label='Help', menu=help_menu)
-help_menu.add_command(label='About', command=open_about)
+menubar.add_cascade(label=lang['Options'], menu=option_menu)
+option_menu.add_checkbutton(label=lang['Lang'], command=donothing)
+
+menubar.add_cascade(label=lang['Help'], menu=help_menu)
+help_menu.add_command(label=lang['About'], command=open_about)
 
 # Config of window
 icon = PhotoImage(file='src\\icon.png')
@@ -100,7 +115,7 @@ window.config(menu=menubar)
 
 # Creating Labels
 question = Label(window, 
-                text='Please how much is the sub total on $?:',
+                text=lang['Principal Question'],
                 font=('Roboto', 14),
                 justify='left',
                 width=35)
@@ -117,7 +132,7 @@ result = Label(window,
                 anchor='w',
                 bg='red',
                 width=50  )
-agent_of_retention_label = Label(window, text='AGENT OF RETENTION: ', font=('Roboto', 11))
+agent_of_retention_label = Label(window, text=lang['Agent of Retention'], font=('Roboto', 11))
 agent_of_retention_label_answer = Label(window, text='', font=('Roboto', 12, 'bold') )
 igtf_label = Label(window, text='IGTF: ', font=('Roboto', 11) )
 igtf_label_answer = Label(window, text='', font=('Roboto', 12, 'bold'))
@@ -128,12 +143,12 @@ user = Label(window,
              font=('Roboto', 24), 
              activebackground='blue')
 version = Label(window, text='Version: alpha-2.0')
-price = Label(window, text='Loading...')
+price = Label(window, text=lang['Loading Label'])
 
 # Creating Buttons
-calculate_button = Button(window, text='Calculate', command=lambda: get_sub_total(principal_result_label, total_result_label, agent_of_retention_label_answer, igtf_label_answer, change_rate_button ,sub_total_entry.get()), width=10)
-delete_button = Button(window, text='Delete', command=lambda: delete(change_rate_button, sub_total_entry,principal_result_label, total_result_label),width=10)
-export_button = Button(window, text='Export') # TODO Make a way to expor the calculation into a pdf or txt file.
+calculate_button = Button(window, text=lang['Calculate Button'], command=lambda: get_sub_total(principal_result_label, total_result_label, agent_of_retention_label_answer, igtf_label_answer, change_rate_button ,sub_total_entry.get()), width=10)
+delete_button = Button(window, text=lang['Delete Button'], command=lambda: delete(change_rate_button, sub_total_entry,principal_result_label, total_result_label),width=10)
+export_button = Button(window, text=lang['Export Button']) # TODO Make a way to expor the calculation into a pdf or txt file.
 change_rate_button = Button(window, text='Bs', font=('Roboto', 12),command='' , width=5, state=DISABLED) #// TODO Make changable values between BS/$
 
 # Position of Widgets
