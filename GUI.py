@@ -21,6 +21,10 @@ inicio = time.time()
 #// TODO Show BCV Price with date.
 # Variables
 #// TODO Look for a way to get the value of the thread or look video on multitasking.
+# TODO Find a way to change overlay language when is selected on the menu.
+# TODO Find a way to change the UI to use another operation mode selected from the menu.
+IGTF_Calc = IntVar() # Created control Variable to manage the dynamic state of the check button.
+IGTF_Calc.set(1) # Set the dynamic value to 1 = Selected
 config = ConfigParser()
 file = 'src\\config.ini'
 config.read(file)
@@ -46,6 +50,8 @@ def update():
     
     # Scrap code
     # Queue to find the result on the scraping of the BCV price when is done.
+    # TODO Find a way to use the same price if the date is different but the price is the same
+    # BUG: The the scrap was done on a sunday the prices was 36.37, and the monday the price was the same but the date was differnt. Find a way to avoid the scrap if the price is the same as it was the day before.
     if config['Date']['date_now'] == date_actual:
         # Takes the values from the src\config.ini because is the same date and it doesnt need the scraped value.
         BCV_Price = float(config['BCV_Price']['bcv_price'])
@@ -95,7 +101,7 @@ file_menu.add_separator()
 file_menu.add_command(label=lang['Close'], command=window.quit)
 
 menubar.add_cascade(label=lang['Operations'], menu=operation_menu)
-operation_menu.add_checkbutton(label=lang['IGTF Calc'], command=donothing)
+operation_menu.add_checkbutton(label=lang['IGTF Calc'], variable= IGTF_Calc, command=donothing)
 operation_menu.add_checkbutton(label=lang['Retention Payment'], command=donothing)
 
 menubar.add_cascade(label=lang['Options'], menu=option_menu)
@@ -156,7 +162,7 @@ question.grid(row=0 , column=0, sticky='nwse')
 sub_total_entry.grid(row=1, column=0, pady=5,sticky='ns')
 
 agent_of_retention_label.grid(row=0, column=1,sticky='w')
-agent_of_retention_label_answer.grid(row=0, column=1, padx=173, sticky='w' )
+agent_of_retention_label_answer.grid(row=0, column=1, padx=147, sticky='w' )
 igtf_label.grid(row=1, column=1, sticky='w')
 igtf_label_answer.grid(row=1, column=1, padx=45, sticky='w')
 
