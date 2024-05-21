@@ -4,6 +4,7 @@ from configparser import ConfigParser
 from src.principal_button_command import get_sub_total, convert_bs_dollars
 from src.delete_module import delete
 from src.about import open_about
+from src.check_lang import change_language
 import os, time, datetime
 
 
@@ -23,8 +24,6 @@ inicio = time.time()
 #// TODO Look for a way to get the value of the thread or look video on multitasking.
 # TODO Find a way to change overlay language when is selected on the menu.
 # TODO Find a way to change the UI to use another operation mode selected from the menu.
-IGTF_Calc = IntVar() # Created control Variable to manage the dynamic state of the check button.
-IGTF_Calc.set(1) # Set the dynamic value to 1 = Selected
 config = ConfigParser()
 file = 'src\\config.ini'
 config.read(file)
@@ -89,6 +88,7 @@ file_menu =  Menu(menubar, tearoff=0)
 help_menu = Menu(menubar, tearoff=0)
 operation_menu = Menu(menubar, tearoff=0)
 option_menu = Menu(menubar, tearoff=0)
+lang_option = Menu(menubar, tearoff=0)
 
 
 menubar.add_cascade(label=lang['File'], menu=file_menu)
@@ -101,11 +101,21 @@ file_menu.add_separator()
 file_menu.add_command(label=lang['Close'], command=window.quit)
 
 menubar.add_cascade(label=lang['Operations'], menu=operation_menu)
-operation_menu.add_checkbutton(label=lang['IGTF Calc'], variable= IGTF_Calc, command=donothing)
+IGTF_Calc = IntVar() # Created control Variable to manage the dynamic state of the check button.
+IGTF_Calc.set(1) # Set the dynamic value to 1 = Selected
+operation_menu.add_checkbutton(label=lang['IGTF Calc'], variable=IGTF_Calc, command=donothing)
 operation_menu.add_checkbutton(label=lang['Retention Payment'], command=donothing)
 
 menubar.add_cascade(label=lang['Options'], menu=option_menu)
-option_menu.add_checkbutton(label=lang['Lang'], command=donothing)
+option_menu.add_cascade(label=lang['Lang'], menu=lang_option)
+spanish_set = IntVar()
+spanish_set.set(1)
+english_set = IntVar()
+english_set.set(0)
+# TODO Find a way to change the display text when a checkbox is selected.
+lang_option.add_checkbutton(label='Spanish', variable=spanish_set, command=lambda: change_language(spanish_set, english_set))
+lang_option.add_checkbutton(label='English', variable=english_set, command=lambda: change_language(english_set, spanish_set))
+
 
 menubar.add_cascade(label=lang['Help'], menu=help_menu)
 help_menu.add_command(label=lang['About'], command=open_about)
