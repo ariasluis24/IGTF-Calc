@@ -6,7 +6,7 @@ spanish = {
     'Calculate Button': 'Calcular',
     'Export Button': 'Exportar',
     
-    'Agent of Retention': 'Agente de Retencion:',
+    'Agent of Retention': 'AGENTE DE RETENCION:',
     'Date': 'Fecha',
 
     'Loading Label': 'Cargando...',
@@ -43,10 +43,10 @@ spanish = {
     'IGTF Input': 'Por favor, cuanto va a ser cancelado en $:?',
 
     # Calculations.py
-    'Normal Bill': 'Factura Normal',
-    'Retained Bill': 'Factura Retenida',
-    'Final Normal Bill': 'Factura Normal Final',
-    'Final Retained Bill': 'Factura Retenida Final',
+    'Normal Bill': '  Factura Normal  ',
+    'Retained Bill': '  Factura Retenida  ',
+    'Final Normal Bill': '  Factura Normal Final  ',
+    'Final Retained Bill': '  Factura Retenida Final  ',
     
     'Sub Total': 'Base Imponible',
     'IVA 1': 'IVA (16%)',
@@ -68,7 +68,7 @@ english = {
     'Calculate Button': 'Calculate',
     'Export Button': 'Export',
     
-    'Agent of Retention': 'Agent of Retention:',
+    'Agent of Retention': 'AGENT OF RETENTION:',
     'Date': 'Date',
 
     'Loading Label': 'Loading...',

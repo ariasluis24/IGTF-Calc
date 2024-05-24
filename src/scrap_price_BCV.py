@@ -31,6 +31,8 @@ def scraping_BCV(Q):
     config.set("Date", 'Date_Now', date)
     config.add_section('BCV_Price')
     config.set('BCV_Price', 'BCV_Price',str_BCV)
+    config.add_section('Language')
+    config.set('Language', 'lang', 'es') 
     
     with open(file, 'w') as configfile:
         config.write(configfile)
