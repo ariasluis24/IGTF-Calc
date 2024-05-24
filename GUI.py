@@ -11,61 +11,57 @@ import os, time, datetime
 
 inicio = time.time()
 # TODO work on how to handle exceptions
-# ///TODO Reasign functions on GUI.py to indivual modules.
+# // TODO Reasign functions on GUI.py to indivual modules.
 # TODO Rename GUI.py to main.py (If necessary).
-# ///TODO Create dictionaries to use them for localization (EN & ES).
-# ///TODO Create menu list, to display language, and more utilities. 
-# ///TODO Create module to calculate the total of a retention bill using the amount pay by the client.
+# // TODO Create dictionaries to use them for localization (EN & ES).
+# // TODO Create menu list, to display language, and more utilities. 
+# // TODO Create module to calculate the total of a retention bill using the amount pay by the client.
 # TODO Create module to calculate what price an item should had dependeding in how many items the order has to obtain a total given by the payer.
 # TODO Check if it is necessary to add those modules to the IGTF-Calc or make them independet, or have 2 versions. 
-#// TODO Show selected options (agent_of_retention, main_question)
-#// TODO Show BCV Price with date.
-# Variables
-#// TODO Look for a way to get the value of the thread or look video on multitasking.
-# TODO Find a way to change overlay language when is selected on the menu.
-# TODO Find a way to change the UI to use another operation mode selected from the menu.
-config = ConfigParser()
-file = 'src\\config.ini'
-config.read(file)
-
-lang = config_language()
-
-# Config of language for UI
-# if config['Language']['lang'] == 'es':
-#     from src.lang.language import spanish
-#     lang = spanish
-
-# elif config['Language']['lang'] == 'en':
-#     from src.lang.language import english
-#     lang = english
-
-
-now = datetime.datetime.now()
-date_actual = now.strftime('%d-%m-%y')
-user_name = os.getlogin()
-result_height = 14 # Used into the height of the Labels.
-
+# // TODO Show selected options (agent_of_retention, main_question)
+# // TODO Show BCV Price with date.
 
 # Windows entity  
-
-
-
 window = Tk()
-
-    
-    
-
 
 def donothing():
         pass
 
 def create_widgets():
+    config = ConfigParser()
+    file = 'src\\config.ini'
+    config.read(file)
+
+    # Variables
+    #// TODO Look for a way to get the value of the thread or look video on multitasking.
+    #// TODO Find a way to change overlay language when is selected on the menu.
+    # TODO Find a way to change the UI to use another operation mode selected from the menu.
+
+    now = datetime.datetime.now()
+    date_actual = now.strftime('%d-%m-%y')
+    user_name = os.getlogin()
+    result_height = 14 # Used into the height of the Labels.
+    spanish_set = IntVar()
+    english_set = IntVar()
+    global lang
+    
+    if config['Language']['lang'] == 'en':
+        from src.lang.language import english
+        lang = english
+        english_set.set(1)
+        spanish_set.set(0)
+
+    elif config['Language']['lang'] == 'es':
+        from src.lang.language import spanish
+        lang = spanish
+        spanish_set.set(1)    
+        english_set.set(0)
+
 
     
-        
-
+    
     def update():
-        window.after(1000, update) #Constanly updates the config of the price label and change_rate_button. 
+        # window.after(1000, update) #Constanly updates the config of the price label and change_rate_button. 
         # lang = config_language()
         print('hola')
         # print('HOla') Debbuger 
@@ -124,10 +120,8 @@ def create_widgets():
     
     menubar.add_cascade(label=lang['Options'], menu=option_menu)
     option_menu.add_cascade(label=lang['Lang'], menu=lang_option)
-    spanish_set = IntVar()
-    spanish_set.set(1)
-    english_set = IntVar()
-    english_set.set(0)
+
+
     # TODO Find a way to change the display text when a checkbox is selected.
     lang_option.add_checkbutton(label='Spanish', variable=spanish_set, command=lambda: change_language(spanish_set, english_set))
     lang_option.add_checkbutton(label='English', variable=english_set, command=lambda: change_language(english_set, spanish_set))
@@ -168,7 +162,7 @@ def create_widgets():
     sub_total_entry.grid(row=1, column=0, pady=5,sticky='ns')
     
     agent_of_retention_label.grid(row=0, column=1,sticky='w')
-    agent_of_retention_label_answer.grid(row=0, column=1, padx=147, sticky='w' )
+    agent_of_retention_label_answer.grid(row=0, column=1, padx=180, sticky='e' )
     igtf_label.grid(row=1, column=1, sticky='w')
     igtf_label_answer.grid(row=1, column=1, padx=45, sticky='w')
     
@@ -183,12 +177,14 @@ def create_widgets():
     sub_total_entry.focus_set() # Focus the entry on the window to instanly put a value.
     window.columnconfigure((0,1), weight= 1, uniform= 'a')
     window.rowconfigure(4, weight= 10, uniform= 'a')
+    # window.rowconfigure(0, weight=1, uniform='b')
+    # window.rowconfigure(1, weight=1, uniform='b')
+    # window.rowconfigure(2, weight=3, uniform='b')
     
     def change_language(selected , unselected):
 
         selected.set(1)
         unselected.set(0)
-    
 
         if config['Language']['lang'] == 'en':
             print('Espanol')
@@ -202,8 +198,6 @@ def create_widgets():
             create_widgets() 
 
 
-
-
         elif config['Language']['lang'] == 'es':
             print('Ingles')
             config.set('Language', 'lang', 'en')
@@ -214,29 +208,23 @@ def create_widgets():
                 widget.destroy()
                 
             create_widgets() 
-
+    # Update price label with the scraped BCV Price.
     window.after(1000, update)
     
    
-create_widgets()
-window.mainloop()
 
 
 
 
-# window.rowconfigure(0, weight=1, uniform='b')
-# window.rowconfigure(1, weight=1, uniform='b')
-# window.rowconfigure(2, weight=3, uniform='b')
 
-# final = time.time()
-#     if __name__ == '__main__':
-#         # Debugger timer to calc init of the mainloop
-#         print("Ejecucion del GUI: ")
-#         print(final - inicio)
 
-#         # Update price label with the scraped BCV Price.
-#         window.after(1000, update)
-#         window.after(1000, config_language)
 
-#         #Runs window.
-#         window.mainloop()
+final = time.time()
+if __name__ == '__main__':
+    # Debugger timer to calc init of the mainloop
+    print("Ejecucion del GUI: ")
+    print(final - inicio)
+
+    #Runs window.
+    create_widgets()
+    window.mainloop()

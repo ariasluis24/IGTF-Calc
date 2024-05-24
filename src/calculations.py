@@ -4,25 +4,24 @@ from decimal import Decimal
 from configparser import ConfigParser
 locale.setlocale(locale.LC_ALL, 'en_DE')
 
-
-config = ConfigParser()
-file = 'src\\config.ini'
-config.read(file)
-
-if config['Language']['lang'] == 'es':
-    from src.lang.language import spanish
-    lang = spanish
-
-elif config['Language']['lang'] == 'en':
-    from src.lang.language import english
-    lang = english
-
 def principal_Calculation(sub_total):
     IVA = sub_total * 0.16
     total = sub_total + IVA
     return IVA, total
 
 def GUI_principal_Calculation(sub_total, IVA, total):
+    config = ConfigParser()
+    file = 'src\\config.ini'
+    config.read(file)
+        
+    if config['Language']['lang'] == 'es':
+        from src.lang.language import spanish
+        lang = spanish
+
+    elif config['Language']['lang'] == 'en':
+        from src.lang.language import english
+        lang = english
+
     return f'''
     ***************{lang['Normal Bill']}********************
     {lang['Sub Total']}:    {round(Decimal(sub_total),2):n}
@@ -62,6 +61,18 @@ def rest_to_Pay(pay_Cash, IGTF,total):
     pass
 
 def GUI_print_Bill(sub_total, IVA, pay_Cash,IGTF, total):
+    config = ConfigParser()
+    file = 'src\\config.ini'
+    config.read(file)
+        
+    if config['Language']['lang'] == 'es':
+        from src.lang.language import spanish
+        lang = spanish
+
+    elif config['Language']['lang'] == 'en':
+        from src.lang.language import english
+        lang = english
+    
     return f"""
     ***************{lang['Final Normal Bill']}********************
     {lang['Sub Total']}:         ${round(Decimal(sub_total),2):n}
@@ -71,6 +82,18 @@ def GUI_print_Bill(sub_total, IVA, pay_Cash,IGTF, total):
         {lang['Total']}:          ${round(Decimal(total) + Decimal(IGTF),2):n}"""
 
 def GUI_print_Reten_Bill(sub_total, reten_IVA, pay_Cash,IGTF,reten_Total):
+    config = ConfigParser()
+    file = 'src\\config.ini'
+    config.read(file)
+        
+    if config['Language']['lang'] == 'es':
+        from src.lang.language import spanish
+        lang = spanish
+
+    elif config['Language']['lang'] == 'en':
+        from src.lang.language import english
+        lang = english
+    
     return f"""
     ***************{lang['Final Retained Bill']}********************
     {lang['Sub Total']}:     ${round(Decimal(sub_total),2):n}

@@ -8,19 +8,6 @@ import src.calculations as calculations
 # Variables
 converted = False
 
-
-config = ConfigParser()
-file = 'src\\config.ini'
-config.read(file)
-
-if config['Language']['lang'] == 'es':
-    from src.lang.language import spanish
-    lang = spanish
-
-elif config['Language']['lang'] == 'en':
-    from src.lang.language import english
-    lang = english
-
 # TODO WIP make the sub_total Entry work only if a valid value.
 # TODO Try to use Try and Exception ValueError.
 
@@ -68,7 +55,19 @@ def get_sub_total(principal_result_label, total_result_label, agent_of_retention
     Saving an individual 'my_list' for each case, to be use later into the function 'convert_bs_dollars'.
 
     """
+    
+    config = ConfigParser()
+    file = 'src\\config.ini'
+    config.read(file)
+    
+    if config['Language']['lang'] == 'es':
+        from src.lang.language import spanish
+        lang = spanish
 
+    elif config['Language']['lang'] == 'en':
+        from src.lang.language import english
+        lang = english
+      
     global my_list, igtf_question, agent_of_retention, converted
 
     sub_total_float = float(sub_total)
