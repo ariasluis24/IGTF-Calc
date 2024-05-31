@@ -130,7 +130,7 @@ def create_widgets():
     
     # Config of window
     icon = PhotoImage(file='src\\icon.png')
-    window.title('IGTF Calculator')
+    window.title(lang['Title'])
     window.iconphoto(True, icon)
     window.geometry('800x370') # Default size of the window
     window.minsize(800, 370) # Minimun size of the window

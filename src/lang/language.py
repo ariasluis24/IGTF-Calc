@@ -1,5 +1,6 @@
 spanish = {
     # GUI.py
+    'Title': 'Calculadora del IGTF',
     'Principal Question': "Cuanto es la base imponible en $:",
     
     'Delete Button': 'Borrar',
@@ -61,7 +62,8 @@ spanish = {
 }
 
 english = {
-        # GUI.py
+    # GUI.py
+    'Title': 'IGTF Calculator',
     'Principal Question': "Please how much is the sub total on $?:",
     
     'Delete Button': 'Delete',
