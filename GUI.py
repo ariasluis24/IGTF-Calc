@@ -16,6 +16,7 @@ inicio = time.time()
 # // TODO Create dictionaries to use them for localization (EN & ES).
 # // TODO Create menu list, to display language, and more utilities. 
 # // TODO Create module to calculate the total of a retention bill using the amount pay by the client.
+# TODO Create a way to change the whole UI when a operation is selected (IGTF or Calculate Subtotal with retention payment made)
 # TODO Create module to calculate what price an item should had dependeding in how many items the order has to obtain a total given by the payer.
 # TODO Check if it is necessary to add those modules to the IGTF-Calc or make them independet, or have 2 versions. 
 # // TODO Show selected options (agent_of_retention, main_question)

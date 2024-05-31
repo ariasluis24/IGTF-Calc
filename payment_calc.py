@@ -1,3 +1,6 @@
+
+# TODO Implement this module to main program.
+# TODO Make it available when selected.
 payment_done = 2674.88
 
 
