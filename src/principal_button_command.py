@@ -67,83 +67,141 @@ def get_sub_total(principal_result_label, total_result_label, agent_of_retention
     elif config['Language']['lang'] == 'en':
         from src.lang.language import english
         lang = english
+
+
+    try:
       
-    global my_list, igtf_question, agent_of_retention, converted
+        global my_list, igtf_question, agent_of_retention, converted
 
-    sub_total_float = float(sub_total)
+        sub_total_float = float(sub_total)
 
-    IVA, total = calculations.principal_Calculation(sub_total_float)
-    principal_calculation = calculations.GUI_principal_Calculation(sub_total_float, IVA, total)
-    
-    principal_result_label.config(text=principal_calculation)
-    principal_result_label.grid(row=5)
-    
-    igtf_question = tkinter.messagebox.askquestion('',lang['IGTF Question'])
-    agent_of_retention = tkinter.messagebox.askquestion('', lang['Retention Question'])
-    
-    change_rate_button.config(text='Bs')   
-    converted = False
-
-    if igtf_question == 'yes' and agent_of_retention == 'yes':
+        IVA, total = calculations.principal_Calculation(sub_total_float)
+        principal_calculation = calculations.GUI_principal_Calculation(sub_total_float, IVA, total)
         
-        agent_of_retention_label_answer.config(text=lang['Retention Yes'], bg='green')
-        igtf_label_answer.config(text=lang['IGTF Yes'], bg='green')
-
-        pay_cash = simpledialog.askfloat("Input", lang['IGTF Input'])
+        principal_result_label.config(text=principal_calculation)
+        principal_result_label.grid(row=5)
         
-        IGTF = calculations.calc_IGTF(pay_cash)
-        reten_IVA, reten_Total = calculations.calc_Retention(sub_total_float, IVA)
-        reten_result = calculations.GUI_print_Reten_Bill(sub_total_float, reten_IVA, pay_cash, IGTF, reten_Total)
-        my_list = [sub_total_float, IVA, pay_cash, IGTF, total]
-
-        total_result_label.config(text=reten_result)
-        total_result_label.grid(row= 5, column=1)
+        igtf_question = tkinter.messagebox.askquestion('',lang['IGTF Question'])
+        agent_of_retention = tkinter.messagebox.askquestion('', lang['Retention Question'])
         
-        change_rate_button.config(state='normal')
+        change_rate_button.config(text='Bs')   
+        converted = False
+
+        if igtf_question == 'yes' and agent_of_retention == 'yes':
+            
+            agent_of_retention_label_answer.config(text=lang['Retention Yes'], bg='green')
+            igtf_label_answer.config(text=lang['IGTF Yes'], bg='green')
+
+            while True:
+                
+                try:
+
+                    pay_cash = simpledialog.askfloat("Input", lang['IGTF Input'])
+                    
+                    reten_IVA, reten_Total = calculations.calc_Retention(sub_total_float, IVA)
+                    
+                    # TODO Implement a new button to pay the total of the bill with $ cash.
+                    if pay_cash > reten_Total:
+                        tkinter.messagebox.showerror(title='', message='No puedes calcular el IGTF con ese monto! Supera el total de la factura!')
+                        pay_cash = reten_Total
+                    
+                    IGTF = calculations.calc_IGTF(pay_cash)
+                    
+                    reten_result = calculations.GUI_print_Reten_Bill(sub_total_float, reten_IVA, pay_cash, IGTF, reten_Total)
+                    my_list = [sub_total_float, IVA, pay_cash, IGTF, total]
+
+                    total_result_label.config(text=reten_result)
+                    total_result_label.grid(row= 5, column=1)
+                    
+                    change_rate_button.config(state='normal')
+
+                    break
+                
+                except ValueError:
+                        
+                    tkinter.messagebox.showerror(title='Error de tipo 1', message=lang['Error'], detail=lang['Error Detail'] )
+                    
+                    pass
+                
+                except TypeError:
+                    
+                    tkinter.messagebox.showerror(title='Error de tipo 2', message=lang['Error 2'], detail=lang['Error Detail 2'] )
+                    
+                    break
+
+                
+
+        elif igtf_question == 'yes' and agent_of_retention == 'no':
+            
+            agent_of_retention_label_answer.config(text=lang['Retention No'], bg='red')
+            igtf_label_answer.config(text=lang['IGTF Yes'], bg='green')
+
+            while True:
+                
+                try:
+
+                    pay_cash = simpledialog.askfloat("Input", lang['IGTF Input'])
+
+
+                    # TODO Implement a new button to pay the total of the bill with $ cash.
+                    if pay_cash > total:
+                        tkinter.messagebox.showerror(title='', message='No puedes calcular el IGTF con ese monto! Supera el total de la factura!')
+                        pay_cash = total
+
+                    IGTF = calculations.calc_IGTF(pay_cash)
+
+                    
+                    result = calculations.GUI_print_Bill(sub_total_float, IVA, pay_cash, IGTF, total) 
+                    my_list = [sub_total_float, IVA, pay_cash, IGTF, total]
+
+                    total_result_label.config(text=result)
+                    total_result_label.grid(row= 5, column=1)
+                    
+                    change_rate_button.config(state='normal')
+                    break
+                
+                except ValueError:
+                        
+                    tkinter.messagebox.showerror(title='Error de tipo 1', message=lang['Error'], detail=lang['Error Detail'] )
+                    
+                    pass
+                
+                except TypeError:
+                    
+                    tkinter.messagebox.showerror(title='Error de tipo 2', message=lang['Error 2'], detail=lang['Error Detail 2'] )
+                    
+                    break                
         
-    elif igtf_question == 'yes' and agent_of_retention == 'no':
+        elif igtf_question == 'no' and agent_of_retention == 'yes':
+            
+            agent_of_retention_label_answer.config(text=lang['Retention Yes'], bg='green')
+            igtf_label_answer.config(text=lang['IGTF No'], bg='red')
+
+            reten_IVA, reten_Total = calculations.calc_Retention(sub_total_float, IVA)
+            reten_result = calculations.GUI_print_Reten_Bill(sub_total_float,reten_IVA,0,0,reten_Total)
+            my_list = [sub_total_float, IVA, 0, 0, total]
+
+            total_result_label.config(text=reten_result)
+            total_result_label.grid(row= 5, column=1)
+            
+            change_rate_button.config(state='normal')
         
-        agent_of_retention_label_answer.config(text=lang['Retention No'], bg='red')
-        igtf_label_answer.config(text=lang['IGTF Yes'], bg='green')
+        elif igtf_question == 'no' and agent_of_retention == 'no':
+            
+            agent_of_retention_label_answer.config(text=lang['Retention No'], bg='red')
+            igtf_label_answer.config(text=lang['IGTF No'], bg='red')
 
-        pay_cash = simpledialog.askfloat("Input", lang['IGTF Input'])
+            result = calculations.GUI_print_Bill(sub_total_float, IVA, 0, 0, total)
+            my_list = [sub_total_float, IVA, 0, 0, total]
 
-        IGTF = calculations.calc_IGTF(pay_cash)
-        result = calculations.GUI_print_Bill(sub_total_float, IVA, pay_cash, IGTF, total) 
-        my_list = [sub_total_float, IVA, pay_cash, IGTF, total]
+            total_result_label.config(text=result)
+            total_result_label.grid(row= 5, column=1)
+            
+            change_rate_button.config(state='normal')
 
-        total_result_label.config(text=result)
-        total_result_label.grid(row= 5, column=1)
+    except ValueError:
+        tkinter.messagebox.showerror(title='Error', message=lang['Error'], detail=lang['Error Detail'])
         
-        change_rate_button.config(state='normal')
-    
-    elif igtf_question == 'no' and agent_of_retention == 'yes':
-        
-        agent_of_retention_label_answer.config(text=lang['Retention Yes'], bg='green')
-        igtf_label_answer.config(text=lang['IGTF No'], bg='red')
-
-        reten_IVA, reten_Total = calculations.calc_Retention(sub_total_float, IVA)
-        reten_result = calculations.GUI_print_Reten_Bill(sub_total_float,reten_IVA,0,0,reten_Total)
-        my_list = [sub_total_float, IVA, 0, 0, total]
-
-        total_result_label.config(text=reten_result)
-        total_result_label.grid(row= 5, column=1)
-        
-        change_rate_button.config(state='normal')
-    
-    elif igtf_question == 'no' and agent_of_retention == 'no':
-        
-        agent_of_retention_label_answer.config(text=lang['Retention No'], bg='red')
-        igtf_label_answer.config(text=lang['IGTF No'], bg='red')
-
-        result = calculations.GUI_print_Bill(sub_total_float, IVA, 0, 0, total)
-        my_list = [sub_total_float, IVA, 0, 0, total]
-
-        total_result_label.config(text=result)
-        total_result_label.grid(row= 5, column=1)
-        
-        change_rate_button.config(state='normal')
-
 
 # TODO Fix documentation of the function.
 def convert_bs_dollars(BCV_Price, total_result_label, change_rate_button): 

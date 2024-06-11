@@ -129,7 +129,7 @@ def create_principal_UI():
     total_result_label = Label(window, text='', font=('Roboto', 10,  'bold'), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
     
     user = Label(window, text=user_name, font=('Roboto', 24), activebackground='blue')
-    version = Label(window, text='Version: alpha-2.0')
+    version = Label(window, text='Version: alpha-3.0')
     price = Label(window, text=lang['Loading Label'])
     
     # Creating Buttons
@@ -225,7 +225,7 @@ def create_second_UI():
     question = Label(window, text=lang['Payment Done'], font=('Roboto', 14), justify='left', width=35, height=2 , compound=TOP)
     
     result = Label(window, text='result',font=('Roboto', 12 , 'bold'), justify=RIGHT, anchor='center',bg='yellow', width=60, height=6, borderwidth=1  )
-    version = Label(window, text='Version: alpha-2.0')
+    version = Label(window, text='Version: alpha-3.0')
     # debug = result
     # debug.config(text="""
     # Factura Final
@@ -354,7 +354,6 @@ def delete_UI():
         config.write(configfile)
     for widget in window.winfo_children():
         widget.destroy()
-
 
 
 final = time.time()
