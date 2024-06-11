@@ -1,5 +1,5 @@
 #IGTF-Calc 
-#ver: alpha-1.00
+#ver: alpha-1.02
 import datetime
 now = datetime.datetime.now()
 date = now.strftime("%d-%m-%Y %H-%M-%S")
