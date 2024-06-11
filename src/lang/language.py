@@ -26,6 +26,8 @@ spanish = {
 
     'Options': 'Opciones',
     'Lang': 'Lenguaje',
+    'Spa': 'Espanol',
+    'Eng': 'Ingles',
 
     'Help': 'Ayuda',
     'About': 'Sobre mi',
@@ -42,6 +44,9 @@ spanish = {
 
 
     'IGTF Input': 'Por favor, cuanto va a ser cancelado en $:?',
+    
+    #sub_total_calculation.py:
+    'Payment Done': 'Cuanto ha pagado el Agente de Retencion?',
 
     # Calculations.py
     'Normal Bill': '  Factura Normal  ',
@@ -89,6 +94,8 @@ english = {
 
     'Options': 'Options',
     'Lang': 'Language',
+    'Spa': 'Spanish',
+    'Eng': 'English',
 
     'Help': 'Help',
     'About': 'About me',
@@ -105,6 +112,7 @@ english = {
 
     'IGTF Input': 'Please, how much is going to be pay on $:?',
 
+    'Payment Done': 'How much the agent of retention paid?',
     # Calculations.py
     'Normal Bill': '  Normal Bill  ',
     'Retained Bill': '  Retained Bill  ',
