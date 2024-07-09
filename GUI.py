@@ -4,24 +4,17 @@ from configparser import ConfigParser
 from src.principal_button_command import get_sub_total, convert_bs_dollars
 from src.second_button_command import get_payment_done
 from src.delete_module import delete, delete_second_UI
-from src.about import open_about
 from src.check_lang import config_language
+from webbrowser import open_new
 import os, time, datetime
 
 
 
 inicio = time.time()
-# TODO work on how to handle exceptions
-# // TODO Reasign functions on GUI.py to indivual modules.
+
 # TODO Rename GUI.py to main.py (If necessary).
-# // TODO Create dictionaries to use them for localization (EN & ES).
-# // TODO Create menu list, to display language, and more utilities. 
-# // TODO Create module to calculate the total of a retention bill using the amount pay by the client.
-# TODO Create a way to change the whole UI when a operation is selected (IGTF or Calculate Subtotal with retention payment made)
 # TODO Create module to calculate what price an item should had dependeding in how many items the order has to obtain a total given by the payer.
-# TODO Check if it is necessary to add those modules to the IGTF-Calc or make them independet, or have 2 versions. 
-# // TODO Show selected options (agent_of_retention, main_question)
-# // TODO Show BCV Price with date.
+
 
 # Windows entity  
 window = Tk()
@@ -36,9 +29,6 @@ def create_principal_UI():
     config.read(file)
 
     # Variables
-    #// TODO Look for a way to get the value of the thread or look video on multitasking.
-    #// TODO Find a way to change overlay language when is selected on the menu.
-    # TODO Find a way to change the UI to use another operation mode selected from the menu.
 
     now = datetime.datetime.now()
     date_actual = now.strftime('%d-%m-%y')
@@ -275,7 +265,7 @@ def create_menu(spanish_set, english_set, IGTF_Calc_set, sub_total_calc_set):
     file_menu.add_command(label=lang['Save'], command=donothing)
     file_menu.add_command(label=lang['Save As'], command=donothing)
     file_menu.add_separator()
-    file_menu.add_command(label=lang['Close'], command=window.quit)
+    file_menu.add_command(label=lang['Close'], command=window.destroy)
     
     menubar.add_cascade(label=lang['Operations'], menu=operation_menu)
 
@@ -355,7 +345,28 @@ def delete_UI():
     for widget in window.winfo_children():
         widget.destroy()
 
+def open_about():
+    
+    def callback(url):
+        open_new(url)
+    
+    about_window = Toplevel(window)
+    about_window.title('About Me')
+    made_by_label = Label(about_window, text='Made by Luis Arias\n Copyright © 2024 Luis Arias. All Rights Reserved',font=('Roboto', 10 ), justify=CENTER, anchor='center',bg='#f1f1f0', width=40, height=3, borderwidth=1  )
+    email_label = Label(about_window, text='ariasdev@gmail.com',font=('Roboto', 10 ), justify=CENTER, anchor='center',bg='#f1f1f0', width=20, height=2, borderwidth=1  )
+    web_page_label = Label(about_window, text='wwww.luisariasdev.com', font=('Roboto', 10), justify=CENTER, anchor='center',fg='blue',bg='#f1f1f0', width=20, height=2, borderwidth=1, cursor='hand2'  )
+    web_page_label.bind('<Button-1>', lambda e: callback('https://wwww.luisariasdev.com'))
+    
+    # Top Window Position
+    made_by_label.grid(row=0, column=0)
+    email_label.grid(row=1, column=0)
+    web_page_label.grid(row=2, column=0)
 
+    # Top Window Config
+    about_window.geometry('340x140') # Default size of the window
+    about_window.minsize(340, 140) # Minimun size of the window
+    about_window.maxsize(340, 140) # Maximun size of the window
+    about_window.mainloop()
 
 final = time.time()
 if __name__ == '__main__':
