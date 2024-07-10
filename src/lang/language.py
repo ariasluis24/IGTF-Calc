@@ -31,6 +31,7 @@ spanish = {
 
     'Help': 'Ayuda',
     'About': 'Sobre mi',
+    'About Info': 'Hecho por Luis Arias\n Copyright © 2024 Luis Arias. \nTodos los Derechos Reservados',
     
     # principal_button_command.py:
     'IGTF Question': 'Esta factura sera cancelada con $?',
@@ -99,6 +100,7 @@ english = {
 
     'Help': 'Help',
     'About': 'About me',
+    'About Info': 'Made by Luis Arias\n Copyright © 2024 Luis Arias. \nAll Rights Reserved',
     
     # principal_button_command.py:
     'IGTF Question': 'This bill is going to be cancel with $?',

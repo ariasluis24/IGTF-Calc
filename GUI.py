@@ -104,6 +104,8 @@ def create_principal_UI():
     
 
     # Creating Labels
+    global change_rate_button, sub_total_entry, principal_result_label, total_result_label, agent_of_retention_label_answer, igtf_label_answer
+
     question = Label(window, text=lang['Principal Question'], font=('Roboto', 14), justify='left', width=35)
     sub_total_entry = Entry(window, font=('Arial', 18), width=20, bg='yellow', justify='center')
     
@@ -119,7 +121,7 @@ def create_principal_UI():
     total_result_label = Label(window, text='', font=('Roboto', 10,  'bold'), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
     
     user = Label(window, text=user_name, font=('Roboto', 24), activebackground='blue')
-    version = Label(window, text='Version: alpha-2.0')
+    version = Label(window, text='Version: Beta 1.0')
     price = Label(window, text=lang['Loading Label'])
     
     # Creating Buttons
@@ -215,7 +217,7 @@ def create_second_UI():
     question = Label(window, text=lang['Payment Done'], font=('Roboto', 14), justify='left', width=35, height=2 , compound=TOP)
     
     result = Label(window, text='result',font=('Roboto', 12 , 'bold'), justify=RIGHT, anchor='center',bg='yellow', width=60, height=6, borderwidth=1  )
-    version = Label(window, text='Version: alpha-2.0')
+    version = Label(window, text='Version: Beta 1.0')
     # debug = result
     # debug.config(text="""
     # Factura Final
@@ -259,11 +261,11 @@ def create_menu(spanish_set, english_set, IGTF_Calc_set, sub_total_calc_set):
         
         
     menubar.add_cascade(label=lang['File'], menu=file_menu)
-    file_menu.add_command(label=lang['New'], command=donothing)
-    file_menu.add_command(label=lang['Open'], command=donothing)
+    file_menu.add_command(label=lang['New'], command=lambda: delete(change_rate_button, sub_total_entry,principal_result_label, total_result_label, agent_of_retention_label_answer, igtf_label_answer))
+    file_menu.add_command(label=lang['Open'], command=donothing, state=DISABLED)
     file_menu.add_separator()
-    file_menu.add_command(label=lang['Save'], command=donothing)
-    file_menu.add_command(label=lang['Save As'], command=donothing)
+    file_menu.add_command(label=lang['Save'], command=donothing, state=DISABLED)
+    file_menu.add_command(label=lang['Save As'], command=donothing, state=DISABLED)
     file_menu.add_separator()
     file_menu.add_command(label=lang['Close'], command=window.destroy)
     
@@ -347,20 +349,21 @@ def delete_UI():
 
 def open_about():
     
+    # Function to open a link on a new tab of the browser.
     def callback(url):
         open_new(url)
     
     about_window = Toplevel(window)
     about_window.title('About Me')
-    made_by_label = Label(about_window, text='Made by Luis Arias\n Copyright © 2024 Luis Arias. All Rights Reserved',font=('Roboto', 10 ), justify=CENTER, anchor='center',bg='#f1f1f0', width=40, height=3, borderwidth=1  )
+    made_by_label = Label(about_window, text=lang['About Info'],font=('Roboto', 10 ), justify=CENTER, anchor='center',bg='#f1f1f0', width=40, height=3, borderwidth=1  )
     email_label = Label(about_window, text='ariasdev@gmail.com',font=('Roboto', 10 ), justify=CENTER, anchor='center',bg='#f1f1f0', width=20, height=2, borderwidth=1  )
     web_page_label = Label(about_window, text='wwww.luisariasdev.com', font=('Roboto', 10), justify=CENTER, anchor='center',fg='blue',bg='#f1f1f0', width=20, height=2, borderwidth=1, cursor='hand2'  )
     web_page_label.bind('<Button-1>', lambda e: callback('https://wwww.luisariasdev.com'))
     
     # Top Window Position
-    made_by_label.grid(row=0, column=0)
-    email_label.grid(row=1, column=0)
-    web_page_label.grid(row=2, column=0)
+    made_by_label.grid(row=0, column=0, sticky='nwse')
+    email_label.grid(row=1, column=0, sticky='nwse')
+    web_page_label.grid(row=2, column=0, sticky='nwse')
 
     # Top Window Config
     about_window.geometry('340x140') # Default size of the window
