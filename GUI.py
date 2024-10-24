@@ -60,9 +60,8 @@ def create_principal_UI():
     create_menu(spanish_set, english_set, IGTF_Calc_set, sub_total_calc_set)
 
     # Config of window
-    icon = PhotoImage(file='src\\icon.png')
     window.title(lang['Title'])
-    window.iconphoto(True, icon)
+    window.iconbitmap('src\\icon.ico')
     window.geometry('800x370') # Default size of the window
     window.minsize(800, 370) # Minimun size of the window
     window.maxsize(800, 370) # Maximun size of the window
