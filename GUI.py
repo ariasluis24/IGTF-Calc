@@ -111,7 +111,9 @@ def create_principal_UI():
     total_result_label = Label(window, text='', font=('Roboto', 10,  'bold'), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
     
     user = Label(window, text=user_name, font=('Roboto', 24), activebackground='blue')
+
     version = Label(window, text='Version: Beta 1.1')
+
     price = Label(window, text=lang['Loading Label'])
     
     # Creating Buttons
@@ -207,7 +209,9 @@ def create_second_UI():
     question = Label(window, text=lang['Payment Done'], font=('Roboto', 14), justify='left', width=35, height=2 , compound=TOP)
     
     result = Label(window, text='result',font=('Roboto', 12 , 'bold'), justify=RIGHT, anchor='center',bg='yellow', width=60, height=6, borderwidth=1  )
-    version = Label(window, text='Version: Beta 1.0')
+
+    version = Label(window, text='Version: Beta 1.1')
+
     # debug = result
     # debug.config(text="""
     # Factura Final
@@ -360,6 +364,7 @@ def open_about():
     about_window.minsize(340, 140) # Minimun size of the window
     about_window.maxsize(340, 140) # Maximun size of the window
     about_window.mainloop()
+
 
 final = time.time()
 executor = ThreadPoolExecutor(max_workers=2)

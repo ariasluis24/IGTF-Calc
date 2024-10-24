@@ -12,6 +12,12 @@ spanish = {
 
     'Loading Label': 'Cargando...',
     
+    'Error': 'Por favor, verifica el monto introducido!',
+    'Error Detail': 'Si el valor es correcto, recuerda NO utilizar comas(,), utiliza puntos(.)!',
+    
+    'Error 2': 'Por favor no dejar el valor en blanco!',
+    'Error Detail 2': 'Vuelva a comenzar su calculo.',
+    
     # Menu Bar
     'File': 'Archivo',
     'New': 'Nuevo',
@@ -43,10 +49,9 @@ spanish = {
     'IGTF Yes': 'SI',
     'IGTF No': 'NO',
 
-
     'IGTF Input': 'Por favor, cuanto va a ser cancelado en $:?',
     
-    #sub_total_calculation.py:
+    #second_button_command.py:
     'Payment Done': 'Cuanto ha pagado el Agente de Retencion?',
 
     # Calculations.py
@@ -81,6 +86,12 @@ english = {
 
     'Loading Label': 'Loading...',
     
+    'Error': 'Please, check the amount entered!',
+    'Error Detail': 'If the amount is correct, remember to NOT use commas(,)\nUse dots(.)!',
+    
+    'Error 2': 'Please, dont introduce an empty value!',
+    'Error Detail 2': 'Start again your calculation.',
+    
     # Menu Bar
     'File': 'File',
     'New': 'New',
@@ -113,8 +124,10 @@ english = {
     'IGTF No': 'NO',
 
     'IGTF Input': 'Please, how much is going to be pay on $:?',
-
+    
+    #second_button_command.py:
     'Payment Done': 'How much the agent of retention paid?',
+    
     # Calculations.py
     'Normal Bill': '  Normal Bill  ',
     'Retained Bill': '  Retained Bill  ',
