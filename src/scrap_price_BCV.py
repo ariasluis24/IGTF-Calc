@@ -10,7 +10,7 @@ file = 'src\\config.ini'
 now = datetime.datetime.now()
 date = now.strftime("%d-%m-%y")
 
-def scraping_BCV(Q):
+def scraping_BCV():
     config = ConfigParser()
     # Scrap part
     page_to_scrape = requests.get('https://www.bcv.org.ve', verify=False)
@@ -39,8 +39,8 @@ def scraping_BCV(Q):
 
     price_BCV = float(str_BCV) # Casting string into a float.
     
-    Q.put(price_BCV)
     final = time.time()
     print('Ejecucion del scrap BCV')
     print(final - inicio)
     # print(price_BCV) # Result = 36.1883
+    return price_BCV

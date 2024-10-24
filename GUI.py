@@ -1,13 +1,12 @@
 from tkinter import *
-from multiprocessing import Process, Queue
 from configparser import ConfigParser
 from src.principal_button_command import get_sub_total, convert_bs_dollars
 from src.second_button_command import get_payment_done
 from src.delete_module import delete, delete_second_UI
 from src.check_lang import config_language
 from webbrowser import open_new
+from concurrent.futures import ThreadPoolExecutor
 import os, time, datetime
-
 
 
 inicio = time.time()
@@ -59,38 +58,29 @@ def create_principal_UI():
 
 
     def update():
-        # window.after(1000, update) #Constanly updates the config of the price label and change_rate_button. 
-        # lang = config_language()
-        # print('hola')
-        # print('HOla') Debbuger 
-        
-        # Scrap code
-        # Queue to find the result on the scraping of the BCV price when is done.
-        # TODO Find a way to use the same price if the date is different but the price is the same
-        # BUG: The the scrap was done on a sunday the prices was 36.37, and the monday the price was the same but the date was differnt. Find a way to avoid the scrap if the price is the same as it was the day before.
+        # Check if the price is already up to date
         if config['Date']['date_now'] == date_actual:
-            # Takes the values from the src\config.ini because is the same date and it doesnt need the scraped value.
+            # Use the cached BCV price from the config
             BCV_Price = float(config['BCV_Price']['bcv_price'])
-            
-            # Update labels with scrap BCV Price.
-            price.config(text=f'{lang['Date']}: {date_actual} BCV: {BCV_Price:.5f}', font=('Roboto', 10, 'bold'))
-            
-            # Adds function to the change rate button.
-            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))  
-        
+            price.config(text=f'{lang["Date"]}: {date_actual} BCV: {BCV_Price:.5f}', font=('Roboto', 10, 'bold'))
+            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))
         else:
-            # Starts the scrap from the BCV webpage.
-            Q = Queue()
-            import src.scrap_price_BCV as BCV
-            scrap = Process(target=BCV.scraping_BCV, args=(Q,))
-            scrap.start()
-            BCV_Price = Q.get()
-            scrap.kill()
-            
-            # Update labels with scrap BCV Price.
-            price.config(text=f'{lang['Date']}: {date_actual} BCV: {BCV_Price}', font=('Roboto', 10, 'bold'))
-            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))  
-    
+            # Perform web scraping in a separate process
+            BCV_Price = start_scraping()
+
+            # Update the price label with the new BCV price
+            price.config(text=f'{lang["Date"]}: {date_actual} BCV: {BCV_Price}', font=('Roboto', 10, 'bold'))
+            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))
+
+    def start_scraping():
+        import src.scrap_price_BCV as BCV
+        future_BCV = executor.submit(BCV.scraping_BCV())
+        future_BCV.add_done_callback(lambda future: handle_scraping_result_BCV(future))
+
+    def handle_scraping_result_BCV(future):
+        result_BCV = future.result()
+        result_BCV_future = float(result_BCV)
+
     # Menu config
     create_menu(spanish_set, english_set, IGTF_Calc_set, sub_total_calc_set)
 
@@ -121,7 +111,7 @@ def create_principal_UI():
     total_result_label = Label(window, text='', font=('Roboto', 10,  'bold'), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
     
     user = Label(window, text=user_name, font=('Roboto', 24), activebackground='blue')
-    version = Label(window, text='Version: Beta 1.0')
+    version = Label(window, text='Version: Beta 1.1')
     price = Label(window, text=lang['Loading Label'])
     
     # Creating Buttons
@@ -372,6 +362,8 @@ def open_about():
     about_window.mainloop()
 
 final = time.time()
+executor = ThreadPoolExecutor(max_workers=2)
+
 if __name__ == '__main__':
     # Debugger timer to calc init of the mainloop
     print("Ejecucion del GUI: ")
