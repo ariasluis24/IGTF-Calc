@@ -56,31 +56,6 @@ def create_principal_UI():
         spanish_set.set(1)    
         english_set.set(0)
 
-
-    def update():
-        # Check if the price is already up to date
-        if config['Date']['date_now'] == date_actual:
-            # Use the cached BCV price from the config
-            BCV_Price = float(config['BCV_Price']['bcv_price'])
-            price.config(text=f'{lang["Date"]}: {date_actual} BCV: {BCV_Price:.5f}', font=('Roboto', 10, 'bold'))
-            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))
-        else:
-            # Perform web scraping in a separate process
-            BCV_Price = start_scraping()
-
-            # Update the price label with the new BCV price
-            price.config(text=f'{lang["Date"]}: {date_actual} BCV: {BCV_Price}', font=('Roboto', 10, 'bold'))
-            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))
-
-    def start_scraping():
-        import src.scrap_price_BCV as BCV
-        future_BCV = executor.submit(BCV.scraping_BCV())
-        future_BCV.add_done_callback(lambda future: handle_scraping_result_BCV(future))
-
-    def handle_scraping_result_BCV(future):
-        result_BCV = future.result()
-        result_BCV_future = float(result_BCV)
-
     # Menu config
     create_menu(spanish_set, english_set, IGTF_Calc_set, sub_total_calc_set)
 
@@ -159,10 +134,35 @@ def create_principal_UI():
     # window.rowconfigure(0, weight=1, uniform='b')
     # window.rowconfigure(1, weight=1, uniform='b')
     # window.rowconfigure(2, weight=3, uniform='b')
-    
+
+    def update():
+        # Check if the price is already up to date
+        
+        if config['Date']['date_now'] == date_actual:
+            # Use the cached BCV price from the config
+            BCV_Price = float(config['BCV_Price']['bcv_price'])
+            price.config(text=f'{lang["Date"]}: {date_actual} BCV: {BCV_Price:.5f}', font=('Roboto', 10, 'bold'))
+            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))
+        
+        else:
+            BCV_Price = start_scraping()
+            
+
+    def start_scraping():
+        import src.scrap_price_BCV as BCV
+        future_BCV = executor.submit(BCV.scraping_BCV)
+        future_BCV.add_done_callback(lambda future: handle_scraping_result_BCV(future))
+
+    def handle_scraping_result_BCV(future):
+        result_BCV = future.result()
+        result_BCV_future = float(result_BCV)
+
+        # Update the price label with the new BCV price
+        price.config(text=f'{lang["Date"]}: {date_actual} BCV: {result_BCV_future:.5f}', font=('Roboto', 10, 'bold'))
+        change_rate_button.config(command=lambda: convert_bs_dollars(result_BCV_future, total_result_label, change_rate_button))
      
     # Update price label with the scraped BCV Price.
-    window.after(1000, update)
+    window.after(0, update)
     
 def create_second_UI():
     
