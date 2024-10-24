@@ -1,27 +1,19 @@
 from tkinter import *
-from multiprocessing import Process, Queue
 from configparser import ConfigParser
 from src.principal_button_command import get_sub_total, convert_bs_dollars
 from src.second_button_command import get_payment_done
 from src.delete_module import delete, delete_second_UI
-from src.about import open_about
 from src.check_lang import config_language
+from webbrowser import open_new
+from concurrent.futures import ThreadPoolExecutor
 import os, time, datetime
 
 
-
 inicio = time.time()
-# TODO work on how to handle exceptions
-# // TODO Reasign functions on GUI.py to indivual modules.
+
 # TODO Rename GUI.py to main.py (If necessary).
-# // TODO Create dictionaries to use them for localization (EN & ES).
-# // TODO Create menu list, to display language, and more utilities. 
-# // TODO Create module to calculate the total of a retention bill using the amount pay by the client.
-# TODO Create a way to change the whole UI when a operation is selected (IGTF or Calculate Subtotal with retention payment made)
 # TODO Create module to calculate what price an item should had dependeding in how many items the order has to obtain a total given by the payer.
-# TODO Check if it is necessary to add those modules to the IGTF-Calc or make them independet, or have 2 versions. 
-# // TODO Show selected options (agent_of_retention, main_question)
-# // TODO Show BCV Price with date.
+
 
 # Windows entity  
 window = Tk()
@@ -36,9 +28,6 @@ def create_principal_UI():
     config.read(file)
 
     # Variables
-    #// TODO Look for a way to get the value of the thread or look video on multitasking.
-    #// TODO Find a way to change overlay language when is selected on the menu.
-    # TODO Find a way to change the UI to use another operation mode selected from the menu.
 
     now = datetime.datetime.now()
     date_actual = now.strftime('%d-%m-%y')
@@ -69,38 +58,29 @@ def create_principal_UI():
 
 
     def update():
-        # window.after(1000, update) #Constanly updates the config of the price label and change_rate_button. 
-        # lang = config_language()
-        # print('hola')
-        # print('HOla') Debbuger 
-        
-        # Scrap code
-        # Queue to find the result on the scraping of the BCV price when is done.
-        # TODO Find a way to use the same price if the date is different but the price is the same
-        # BUG: The the scrap was done on a sunday the prices was 36.37, and the monday the price was the same but the date was differnt. Find a way to avoid the scrap if the price is the same as it was the day before.
+        # Check if the price is already up to date
         if config['Date']['date_now'] == date_actual:
-            # Takes the values from the src\config.ini because is the same date and it doesnt need the scraped value.
+            # Use the cached BCV price from the config
             BCV_Price = float(config['BCV_Price']['bcv_price'])
-            
-            # Update labels with scrap BCV Price.
-            price.config(text=f'{lang['Date']}: {date_actual} BCV: {BCV_Price:.5f}', font=('Roboto', 10, 'bold'))
-            
-            # Adds function to the change rate button.
-            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))  
-        
+            price.config(text=f'{lang["Date"]}: {date_actual} BCV: {BCV_Price:.5f}', font=('Roboto', 10, 'bold'))
+            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))
         else:
-            # Starts the scrap from the BCV webpage.
-            Q = Queue()
-            import src.scrap_price_BCV as BCV
-            scrap = Process(target=BCV.scraping_BCV, args=(Q,))
-            scrap.start()
-            BCV_Price = Q.get()
-            scrap.kill()
-            
-            # Update labels with scrap BCV Price.
-            price.config(text=f'{lang['Date']}: {date_actual} BCV: {BCV_Price}', font=('Roboto', 10, 'bold'))
-            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))  
-    
+            # Perform web scraping in a separate process
+            BCV_Price = start_scraping()
+
+            # Update the price label with the new BCV price
+            price.config(text=f'{lang["Date"]}: {date_actual} BCV: {BCV_Price}', font=('Roboto', 10, 'bold'))
+            change_rate_button.config(command=lambda: convert_bs_dollars(BCV_Price, total_result_label, change_rate_button))
+
+    def start_scraping():
+        import src.scrap_price_BCV as BCV
+        future_BCV = executor.submit(BCV.scraping_BCV())
+        future_BCV.add_done_callback(lambda future: handle_scraping_result_BCV(future))
+
+    def handle_scraping_result_BCV(future):
+        result_BCV = future.result()
+        result_BCV_future = float(result_BCV)
+
     # Menu config
     create_menu(spanish_set, english_set, IGTF_Calc_set, sub_total_calc_set)
 
@@ -114,6 +94,8 @@ def create_principal_UI():
     
 
     # Creating Labels
+    global change_rate_button, sub_total_entry, principal_result_label, total_result_label, agent_of_retention_label_answer, igtf_label_answer
+
     question = Label(window, text=lang['Principal Question'], font=('Roboto', 14), justify='left', width=35)
     sub_total_entry = Entry(window, font=('Arial', 18), width=20, bg='yellow', justify='center')
     
@@ -129,7 +111,9 @@ def create_principal_UI():
     total_result_label = Label(window, text='', font=('Roboto', 10,  'bold'), justify=RIGHT, borderwidth=1,width=70, height=result_height, relief='solid', bg='yellow')
     
     user = Label(window, text=user_name, font=('Roboto', 24), activebackground='blue')
-    version = Label(window, text='Version: alpha-3.0')
+
+    version = Label(window, text='Version: Beta 1.1')
+
     price = Label(window, text=lang['Loading Label'])
     
     # Creating Buttons
@@ -225,7 +209,9 @@ def create_second_UI():
     question = Label(window, text=lang['Payment Done'], font=('Roboto', 14), justify='left', width=35, height=2 , compound=TOP)
     
     result = Label(window, text='result',font=('Roboto', 12 , 'bold'), justify=RIGHT, anchor='center',bg='yellow', width=60, height=6, borderwidth=1  )
-    version = Label(window, text='Version: alpha-3.0')
+
+    version = Label(window, text='Version: Beta 1.1')
+
     # debug = result
     # debug.config(text="""
     # Factura Final
@@ -269,13 +255,13 @@ def create_menu(spanish_set, english_set, IGTF_Calc_set, sub_total_calc_set):
         
         
     menubar.add_cascade(label=lang['File'], menu=file_menu)
-    file_menu.add_command(label=lang['New'], command=donothing)
-    file_menu.add_command(label=lang['Open'], command=donothing)
+    file_menu.add_command(label=lang['New'], command=lambda: delete(change_rate_button, sub_total_entry,principal_result_label, total_result_label, agent_of_retention_label_answer, igtf_label_answer))
+    file_menu.add_command(label=lang['Open'], command=donothing, state=DISABLED)
     file_menu.add_separator()
-    file_menu.add_command(label=lang['Save'], command=donothing)
-    file_menu.add_command(label=lang['Save As'], command=donothing)
+    file_menu.add_command(label=lang['Save'], command=donothing, state=DISABLED)
+    file_menu.add_command(label=lang['Save As'], command=donothing, state=DISABLED)
     file_menu.add_separator()
-    file_menu.add_command(label=lang['Close'], command=window.quit)
+    file_menu.add_command(label=lang['Close'], command=window.destroy)
     
     menubar.add_cascade(label=lang['Operations'], menu=operation_menu)
 
@@ -355,8 +341,34 @@ def delete_UI():
     for widget in window.winfo_children():
         widget.destroy()
 
+def open_about():
+    
+    # Function to open a link on a new tab of the browser.
+    def callback(url):
+        open_new(url)
+    
+    about_window = Toplevel(window)
+    about_window.title('About Me')
+    made_by_label = Label(about_window, text=lang['About Info'],font=('Roboto', 10 ), justify=CENTER, anchor='center',bg='#f1f1f0', width=40, height=3, borderwidth=1  )
+    email_label = Label(about_window, text='ariasdev@gmail.com',font=('Roboto', 10 ), justify=CENTER, anchor='center',bg='#f1f1f0', width=20, height=2, borderwidth=1  )
+    web_page_label = Label(about_window, text='wwww.luisariasdev.com', font=('Roboto', 10), justify=CENTER, anchor='center',fg='blue',bg='#f1f1f0', width=20, height=2, borderwidth=1, cursor='hand2'  )
+    web_page_label.bind('<Button-1>', lambda e: callback('https://wwww.luisariasdev.com'))
+    
+    # Top Window Position
+    made_by_label.grid(row=0, column=0, sticky='nwse')
+    email_label.grid(row=1, column=0, sticky='nwse')
+    web_page_label.grid(row=2, column=0, sticky='nwse')
+
+    # Top Window Config
+    about_window.geometry('340x140') # Default size of the window
+    about_window.minsize(340, 140) # Minimun size of the window
+    about_window.maxsize(340, 140) # Maximun size of the window
+    about_window.mainloop()
+
 
 final = time.time()
+executor = ThreadPoolExecutor(max_workers=2)
+
 if __name__ == '__main__':
     # Debugger timer to calc init of the mainloop
     print("Ejecucion del GUI: ")

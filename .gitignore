@@ -14,3 +14,5 @@ src/lang/__pycache__/es.cpython-312.pyc
 src/lang/__pycache__/language.cpython-312.pyc
 src/__pycache__/check_lang.cpython-312.pyc
 src/__pycache__/second_button_command.cpython-312.pyc
+GUI.spec
+GUI.exe
