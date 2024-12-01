@@ -11,9 +11,9 @@ import os, time, datetime
 
 inicio = time.time()
 
-# TODO Rename GUI.py to main.py (If necessary).
-# TODO Create module to calculate what price an item should had dependeding in how many items the order has to obtain a total given by the payer.
-
+config = ConfigParser()
+file = 'src\\config.ini'
+config.read(file)
 
 # Windows entity  
 window = Tk()
@@ -23,10 +23,6 @@ def donothing():
 
 def create_principal_UI():
     
-    config = ConfigParser()
-    file = 'src\\config.ini'
-    config.read(file)
-
     # Variables
 
     now = datetime.datetime.now()
@@ -47,7 +43,6 @@ def create_principal_UI():
         lang = english
         english_set.set(1)
         spanish_set.set(0)
-
 
 
     elif config['Language']['lang'] == 'es':
@@ -86,7 +81,7 @@ def create_principal_UI():
     
     user = Label(window, text=user_name, font=('Roboto', 24), activebackground='blue')
 
-    version = Label(window, text='Version: Beta 1.1')
+    version = Label(window, text='Version: Beta 1.2')
 
     price = Label(window, text=lang['Loading Label'])
     
@@ -165,13 +160,9 @@ def create_principal_UI():
     
 def create_second_UI():
     
-    config = ConfigParser()
-    file = 'src\\config.ini'
-    config.read(file)
-    
-
     with open(file, 'w') as configfile:
         config.write(configfile)
+    
     for widget in window.winfo_children():
         widget.destroy()
 
@@ -283,13 +274,13 @@ def create_menu(spanish_set, english_set, IGTF_Calc_set, sub_total_calc_set):
 def change_operation(selected , unselected):
         
         if selected.get() == 1:
+            config.set('Operation', 'op', '1') 
             delete_UI()
-            
             create_principal_UI()
-       
-        if selected.get() == 2:
-            delete_UI()
 
+        if selected.get() == 2:
+            config.set('Operation', 'op', '2') 
+            delete_UI()
             create_second_UI()     
         
         selected.set(1)
@@ -298,9 +289,6 @@ def change_operation(selected , unselected):
 def change_language(selected , unselected):
         
         # TODO Find a way to reset the UI with the language selected but keeping the operation currently being used.
-        config = ConfigParser()
-        file = 'src\\config.ini'
-        config.read(file)
         selected.set(1)
         unselected.set(0)
         
@@ -330,13 +318,10 @@ def change_language(selected , unselected):
             create_principal_UI()
 
 def delete_UI():
-    
-    config = ConfigParser()
-    file = 'src\\config.ini'
-    config.read(file)
 
     with open(file, 'w') as configfile:
         config.write(configfile)
+    
     for widget in window.winfo_children():
         widget.destroy()
 
@@ -374,5 +359,12 @@ if __name__ == '__main__':
     print(final - inicio)
 
     #Runs window.
-    create_principal_UI()
+    if config['Operation']['op'] == '1':
+        
+        create_principal_UI()   
+    
+    elif config['Operation']['op'] == '2':
+        
+        create_second_UI()
+    
     window.mainloop()
