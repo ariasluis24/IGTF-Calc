@@ -11,6 +11,7 @@ import os, time, datetime
 
 inicio = time.time()
 
+version = 'Beta 1.3'
 config = ConfigParser()
 file = 'src\\config.ini'
 config.read(file)
@@ -81,7 +82,7 @@ def create_principal_UI():
     
     user = Label(window, text=user_name, font=('Roboto', 24), activebackground='blue')
 
-    version = Label(window, text='Version: Beta 1.2')
+    version_label = Label(window, text=f'Version: {version}')
 
     price = Label(window, text=lang['Loading Label'])
     
@@ -118,7 +119,7 @@ def create_principal_UI():
     delete_button.grid(row=2, column=0, padx=110,sticky='ws')
     
     change_rate_button.grid(row=6, column=1, padx= 2, pady=2, sticky='se')
-    version.grid(row=6, column=0, sticky='ws', )
+    version_label.grid(row=6, column=0, sticky='ws', )
     price.grid(row=6, column=0, sticky='es')
    
     # Config Grid of the window
@@ -166,7 +167,9 @@ def create_second_UI():
     for widget in window.winfo_children():
         widget.destroy()
 
-    window.title('Calculo de Base Imponible con Pago de Agente de Retencion')
+    window.title('Calculo de Base Imponible con Pago de Agente de Retencion') # * Add translation to lang.
+    window.iconbitmap('src\\icon.ico')\
+    
     spanish_set = IntVar()
     
     english_set = IntVar()
@@ -200,7 +203,7 @@ def create_second_UI():
     
     result = Label(window, text='result',font=('Roboto', 12 , 'bold'), justify=RIGHT, anchor='center',bg='yellow', width=60, height=6, borderwidth=1  )
 
-    version = Label(window, text='Version: Beta 1.1')
+    version_label = Label(window, text=f'Version: {version}')
 
     # debug = result
     # debug.config(text="""
@@ -230,7 +233,7 @@ def create_second_UI():
     calculate_button.grid(row=4, column=0, pady=45 , padx=110,sticky='ne')
     delete_button.grid(row=4, column=0, pady=45 ,padx=110,sticky='nw')
     
-    version.grid(row=6, column=0, sticky='ws', )
+    version_label.grid(row=6, column=0, sticky='ws', )
     payment_entry.focus_set()
 
 def create_menu(spanish_set, english_set, IGTF_Calc_set, sub_total_calc_set):  
